@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Daily Perfume",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
