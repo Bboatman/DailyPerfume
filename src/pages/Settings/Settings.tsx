@@ -1,10 +1,10 @@
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonTitle, IonToggle, IonToolbar } from '@ionic/react';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import AppHeader from '../../components/AppHeader';
 import { AppContext } from '../../contexts/AppContext';
 import './Settings.css';
 
-const Settings: React.FC = (params: any) => {
+const Settings: React.FC = () => {
   const {state, dispatch} = useContext(AppContext)
   
   return (

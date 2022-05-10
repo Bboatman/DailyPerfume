@@ -67,7 +67,7 @@ function AppContextProvider(props: any) {
     }
 
     const [state, dispatch] = useReducer(reducer, fullInitialState);
-    const [storage, setStorage] = useState(new Storage());
+    const [storage] = useState(new Storage());
     const [loaded, setLoaded] = useState(false);
     let value: any = { state, dispatch};
 

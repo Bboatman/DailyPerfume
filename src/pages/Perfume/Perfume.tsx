@@ -6,7 +6,7 @@ import { AppContext } from '../../contexts/AppContext';
 import './Perfume.css';
 
 const Perfume: React.FC = () => {
-  const {state, dispatch} = useContext(AppContext);
+  const { state } = useContext(AppContext);
 
   return (
     <IonPage>

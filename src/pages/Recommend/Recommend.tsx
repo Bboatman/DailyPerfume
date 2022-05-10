@@ -1,42 +1,47 @@
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonItemDivider, IonLabel, IonList, IonPage, IonRange, IonRow, IonTitle, IonToolbar } from '@ionic/react';
-import { trashBin, sparkles, skullSharp, heart, snow, flame, thunderstorm, sunny } from 'ionicons/icons';
+import { IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonPage, IonRange, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import { trashBin, sparkles, skullSharp, heart } from 'ionicons/icons';
 import { useContext, useState } from 'react';
 import AppHeader from '../../components/AppHeader';
+import RecommendationCard from '../../components/RecommendationCard';
 import { AppContext } from '../../contexts/AppContext';
-import './Recommend.css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 
 const Recommend: React.FC = () => {
-  const {state, dispatch} = useContext(AppContext);
+  const { state } = useContext(AppContext);
 
   const [fanciness, setFanciness] = useState(.5)
   const [mood, setMood] = useState(.5);
-  const [matchRec, setMatchRec] = useState<string>();
-  const [breakRec, setBreakRec] = useState();
+  const [matchRec, setMatchRec] = useState<any>();
   
   const generateRecommendations = () => {
       let allPerfumes: any[] = Object.values(state.perfume).filter(elem => elem != undefined);
-      if (state.weatherScores){
-        let max = {id: undefined, score: -1};
-        let min = {id: undefined, score: 2};
+    if (state.weatherScores) {
         let mScore = state.settings.mood ? mood : 1 - mood
         let fScore = state.settings.fanciness ? fanciness : 1 - fanciness;
         let tScore = state.settings.temp ? state.weatherScores.heatLevel : 5 - state.weatherScores.heatLevel;
         let gScore = state.settings.gloom ? state.weatherScores.gloom : 1 - state.weatherScores.gloom;
         let userState = [mScore, fScore, tScore, gScore];
 
+      const scoreArr = []
         for (let perfume of allPerfumes){
           let perfumeArray = [perfume.mood, perfume.fanciness, perfume.temp, perfume.gloom]
           let cosineSimilarity = getCosineSimilarity(perfumeArray, userState);
-          if (cosineSimilarity > max.score){
-            max = {id: perfume.id, score: cosineSimilarity}
-          }
-          if (cosineSimilarity < min.score){
-            min = {id: perfume.id, score: cosineSimilarity}
-          }
+          scoreArr.push({ score: cosineSimilarity, id: perfume.id })
         }
         
-        setMatchRec(min.id);
-        setBreakRec(max.id);
+      scoreArr.sort((a, b) => (a.score > b.score) ? 1 : -1)
+      let arrLen = scoreArr.length;
+      setMatchRec({
+        match1: scoreArr[0].id,
+        match2: arrLen > 3 ? scoreArr[1].id : undefined,
+        match3: arrLen > 5 ? scoreArr[2].id : undefined,
+        break1: scoreArr[arrLen - 1].id,
+        break2: arrLen > 3 ? scoreArr[arrLen - 2].id : undefined,
+        break3: arrLen > 5 ? scoreArr[arrLen - 4].id : undefined,
+      });
       }
   }
 
@@ -55,21 +60,6 @@ const Recommend: React.FC = () => {
     return similarity;
 }
 
-const generateIconDescriptor = (perfume: any) => {
-  let moodIcon, fancinessIcon, tempIcon, gloomIcon;
-  moodIcon = perfume.mood < .5 ? skullSharp : heart;
-  fancinessIcon = perfume.fanciness < .5 ? trashBin : sparkles;
-  tempIcon = perfume.temp < 2.5 ? snow : flame;
-  gloomIcon = perfume.gloom < .5 ? thunderstorm : sunny;
-
-  return <IonRow style={{justifyContent: "space-around"}}>
-    <IonIcon size='large' icon={moodIcon}/>
-    <IonIcon size='large' icon={fancinessIcon}/>
-    <IonIcon size='large' icon={tempIcon}/>
-    <IonIcon size='large' icon={gloomIcon}/>
-    </IonRow>
-}
-
 
   return (
     <IonPage>
@@ -80,7 +70,7 @@ const generateIconDescriptor = (perfume: any) => {
             <IonTitle size="large">Recommend</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonList style={{marginTop: 20}}>
+        <IonList style={{ marginTop: 30 }}>
         <IonItem>
               <IonLabel position='fixed'>Fanciness</IonLabel>
               <IonRange value={fanciness} step={.1} min={0} max={1} onIonChange={e => setFanciness(e.detail.value.valueOf() as number)}>
@@ -94,41 +84,58 @@ const generateIconDescriptor = (perfume: any) => {
                   <IonIcon icon={skullSharp} slot="start"/>
                   <IonIcon icon={heart} slot="end"/>
               </IonRange>
-        </IonItem>
-        <IonItemDivider/>
-        <IonItem>
-          <IonButton onClick={generateRecommendations} style={{width: "50%", marginLeft:"25%", height: "80%"}}>Recommend</IonButton>
-        </IonItem>
+          </IonItem>
         </IonList>
-        { matchRec && state.perfume[matchRec] && 
-        (<IonCard href={'/perfume/' + matchRec}>
-          <IonCardHeader>
-            <IonCardSubtitle>Match Recommendation</IonCardSubtitle>
-            <IonCardTitle>{state.perfume[matchRec].title}</IonCardTitle>
-          </IonCardHeader>
+        <IonRow style={{ justifyContent: "space-around", alignItems: "center", marginTop: 10 }}>
+          <IonButton onClick={generateRecommendations} style={{ width: "50%" }}>Recommend</IonButton>
+        </IonRow>
+        {matchRec &&
+          <Swiper
+            height={1}
+            spaceBetween={1}
+            slidesPerView={1}
+            pagination={{ clickable: true }}
+            scrollbar={{ draggable: true }}
+            loop={true}
+          >
+            {matchRec.match1 && state.perfume[matchRec.match1] &&
+              (<SwiperSlide>
+                <RecommendationCard perfumeId={matchRec.match1} cardHeader="Match Recommendation" />
+              </SwiperSlide>)}
+            {matchRec.match2 && state.perfume[matchRec.match2] &&
+              (<SwiperSlide>
+                <RecommendationCard perfumeId={matchRec.match2} cardHeader="Match Recommendation" />
+              </SwiperSlide>)}
+            {matchRec.match3 && state.perfume[matchRec.match3] &&
+              (<SwiperSlide>
+                <RecommendationCard perfumeId={matchRec.match3} cardHeader="Match Recommendation" />
+              </SwiperSlide>)}
+          </Swiper>
+        }
 
-          <IonCardContent>
-            {state.perfume[matchRec].description}
-          </IonCardContent>
-          <IonCardContent style={{width: "100%"}}>
-            {generateIconDescriptor(state.perfume[matchRec])}
-          </IonCardContent>
-        </IonCard>)}
-        
-        { breakRec && state.perfume[breakRec] && 
-        (<IonCard href={'/perfume/' + breakRec}>
-          <IonCardHeader>
-            <IonCardSubtitle>Break The Mould</IonCardSubtitle>
-            <IonCardTitle>{state.perfume[breakRec].title}</IonCardTitle>
-          </IonCardHeader>
-
-          <IonCardContent>
-            {state.perfume[breakRec].description}
-          </IonCardContent>
-          <IonCardContent style={{width: "100%"}}>
-            {generateIconDescriptor(state.perfume[breakRec])}
-          </IonCardContent>
-        </IonCard>)}
+        {matchRec &&
+          <Swiper
+            height={1}
+            spaceBetween={1}
+            slidesPerView={1}
+            pagination={{ clickable: true }}
+            scrollbar={{ draggable: true }}
+            loop={true}
+          >
+            {matchRec.break1 && state.perfume[matchRec.break1] &&
+              (<SwiperSlide>
+                <RecommendationCard perfumeId={matchRec.break1} cardHeader="Break the Mould" />
+              </SwiperSlide>)}
+            {matchRec.break2 && state.perfume[matchRec.break2] &&
+              (<SwiperSlide>
+                <RecommendationCard perfumeId={matchRec.break2} cardHeader="Break the Mould" />
+              </SwiperSlide>)}
+            {matchRec.break3 && state.perfume[matchRec.break3] &&
+              (<SwiperSlide>
+                <RecommendationCard perfumeId={matchRec.break3} cardHeader="Break the Mould" />
+              </SwiperSlide>)}
+          </Swiper>
+        }
       </IonContent>
     </IonPage>
   );
