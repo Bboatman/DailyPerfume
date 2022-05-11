@@ -32,7 +32,7 @@ const Recommend: React.FC = () => {
           scoreArr.push({ score: cosineSimilarity, id: perfume.id })
         }
         
-      scoreArr.sort((a, b) => (a.score > b.score) ? 1 : -1)
+      scoreArr.sort((a, b) => (a.score < b.score) ? 1 : -1)
       let arrLen = scoreArr.length;
       setMatchRec({
         match: scoreArr[0].id,
@@ -88,7 +88,6 @@ const Recommend: React.FC = () => {
         </IonRow>
         {matchRec &&
           <Swiper
-            height={1}
             spaceBetween={1}
             slidesPerView={1}
             pagination={{ clickable: true }}

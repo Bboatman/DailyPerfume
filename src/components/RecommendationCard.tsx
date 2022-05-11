@@ -59,15 +59,17 @@ const RecommendationCard: React.FC<ContainerProps> = ({ perfumeId, cardHeader })
     }
     return (
         <IonCard style={{ height: 400 }}>
-            <IonCardHeader>
-                <IonCardSubtitle color='secondary'>{cardHeader}</IonCardSubtitle>
-                <IonCardTitle>{state.perfume[perfumeId].title}</IonCardTitle>
-                <IonCardSubtitle>{state.perfume[perfumeId].house}</IonCardSubtitle>
-            </IonCardHeader>
+            <div style={{ minHeight: 330, maxHeight: 330 }}>
+                <IonCardHeader>
+                    <IonCardSubtitle color='secondary'>{cardHeader}</IonCardSubtitle>
+                    <IonCardTitle>{state.perfume[perfumeId].title}</IonCardTitle>
+                    <IonCardSubtitle>{state.perfume[perfumeId].house}</IonCardSubtitle>
+                </IonCardHeader>
 
-            <IonCardContent style={{ height: "60%" }}>
-                {state.perfume[perfumeId].description}
-            </IonCardContent>
+                <IonCardContent>
+                    {state.perfume[perfumeId].description}
+                </IonCardContent>
+            </div>
             <IonFooter>
                 <IonToolbar>
                     {generateIconDescriptor(state.perfume[perfumeId])}
