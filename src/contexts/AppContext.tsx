@@ -93,13 +93,7 @@ function AppContextProvider(props: any) {
 
     useEffect(() => {
         if (!state.isSaving) { return }
-        console.log(state.isSaving)
-        try{
-            storage.set("state", state);
-            dispatch({ type: "setSaving", data: false })
-        } catch {
-            console.log("error")
-        }
+        saveState();
         return
     }, [state.isSaving])
 
@@ -110,6 +104,15 @@ function AppContextProvider(props: any) {
 
         return
     }, [state.weather] )
+
+    const saveState = async () => {
+        try {
+            await storage.set("state", state);
+            dispatch({ type: "setSaving", data: false })
+        } catch {
+            console.log("error")
+        }
+    }
 
     const initializeStorage = async () => {
         await storage.create();
