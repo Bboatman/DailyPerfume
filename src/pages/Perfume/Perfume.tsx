@@ -1,12 +1,32 @@
-import { IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonPage, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
 import { add } from 'ionicons/icons';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AppHeader from '../../components/AppHeader';
 import { AppContext } from '../../contexts/AppContext';
 import './Perfume.css';
 
 const Perfume: React.FC = () => {
   const { state } = useContext(AppContext);
+  const [localPerfumes, setLocalPerfumes] = useState<any[]>()
+  const [searchText, setSearchText] = useState<string>()
+
+  useEffect(() => {
+    let perfumes = Object.values(state.perfume)
+    perfumes.sort((a: any, b: any) => (a.title > b.title) ? 1 : -1);
+    if (searchText && searchText.length > 0) {
+      let compText = searchText.toLowerCase();
+      perfumes = perfumes.filter((elem: any) => {
+        console.log(elem)
+        if (!elem) { return false }
+        let titleHas = elem?.title ? elem.title.toLowerCase().includes(compText) : false;
+        let descHas = elem?.description ? elem.description.toLowerCase().includes(compText) : false;
+        let houseHas = elem?.house ? elem.house.toLowerCase().includes(compText) : false;
+        return (titleHas || houseHas || descHas)
+      });
+    }
+    setLocalPerfumes(perfumes);
+  }, [state.perfume, searchText])
+
 
   return (
     <IonPage>
@@ -16,9 +36,11 @@ const Perfume: React.FC = () => {
           <IonToolbar>
             <IonTitle size="large">Perfumes</IonTitle>
           </IonToolbar>
-        </IonHeader>
+        </IonHeader>        
+        <IonSearchbar placeholder='Search by house, note, or name' value={searchText} onIonChange={e => setSearchText(e.detail.value!)}></IonSearchbar>
+
         <IonList>
-          {Object.values(state.perfume).map((p: any) => p && (
+          {localPerfumes && localPerfumes.map((p: any) => p && (
             <IonItem key={p.id} href={'perfume/' + p.id}>
               <IonLabel>{p?.title}</IonLabel>
             </IonItem>)
