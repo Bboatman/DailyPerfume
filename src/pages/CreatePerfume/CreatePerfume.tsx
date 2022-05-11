@@ -22,12 +22,13 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
     const [mood, setMood] = useState<number>(.5)
     const [gloom, setGloom] = useState<number>(.5)
     const [temp, setTemp] = useState<number>(2.5)
+    const [shouldLeave, setShouldLeave] = useState<boolean>(false);
     
     const {state, dispatch} = useContext(AppContext)
     const history = useHistory();
     
     useEffect(() => {
-        if(!state && Object.hasOwn(state.perfume, id)){ return }
+        if ((!state && Object.hasOwn(state.perfume, id)) || state.isSaving) { return }
         let perfume = state.perfume[id];
         console.log()
         if (!perfume) { return }
@@ -41,6 +42,11 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
         return
     },[id, state])
 
+    useEffect(() => {
+        if (state.isSaving) { return }
+        if (shouldLeave) { history.goBack() }
+    }, [state.isSaving, shouldLeave])
+
     const handlePerfumeCreation = () => {
         console.log(fanciness, mood, gloom, temp)
         if (!(title && id && fanciness && mood && gloom && temp)) { return }
@@ -48,12 +54,12 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
             title, id, description, fanciness, mood, gloom, temp, house
         }
         dispatch({type: "createPerfume", data: ret})
-        history.goBack();
+        setShouldLeave(true);
     }
 
     const handlePerfumeDeletion = () => {
         dispatch({type: "deletePerfume", data: id})
-        history.goBack();
+        setShouldLeave(true);
     }
 
     const roundNumber = (number: number) => {
@@ -65,11 +71,11 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
         <IonHeader>
             <AppHeader title='Create Perfumes'>
                 <IonButtons slot="start">
-                    <IonBackButton defaultHref="/perfume" />
+                        <IonBackButton color='tertiary' defaultHref="/perfume" />
                 </IonButtons>
-                <IonTitle>Create Perfumes</IonTitle>
+                    <IonTitle color='dark'>Create Perfumes</IonTitle>
                 <IonButtons slot='end'>
-                    <IonButton fill="clear" onClick={handlePerfumeCreation}>
+                        <IonButton fill="clear" color='tertiary' onClick={handlePerfumeCreation}>
                         <IonIcon icon={save}/>
                     </IonButton>
                     <IonButton fill="clear" color='danger' onClick={handlePerfumeDeletion}>
@@ -112,43 +118,43 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
           <IonItemDivider/>
           <IonItem>
                 <IonLabel position='fixed'>Temperature</IonLabel>
-                    <IonRange value={temp} step={.1} min={1} max={5}
+                    <IonRange color='secondary' value={temp} step={.1} min={1} max={5}
                         onIonChange={e =>
                             setTemp(roundNumber(e.detail.value.valueOf() as number))
                         }>
-                    <IonIcon icon={snow} slot="start"/>
-                    <IonIcon icon={flame} slot="end"/>
+                        <IonIcon color="tertiary" icon={snow} slot="start" />
+                        <IonIcon color="tertiary" icon={flame} slot="end" />
                 </IonRange>
           </IonItem>
           
           <IonItem>
                 <IonLabel position='fixed'>Gloom</IonLabel>
-                    <IonRange value={gloom} step={.02} min={0} max={1}
+                    <IonRange color='secondary' value={gloom} step={.02} min={0} max={1}
                         onIonChange={e =>
                             setGloom(roundNumber(e.detail.value.valueOf() as number))
                         }>
-                    <IonIcon icon={thunderstorm} slot="start"/>
-                    <IonIcon icon={sunny} slot="end"/>
+                        <IonIcon color="tertiary" icon={thunderstorm} slot="start" />
+                        <IonIcon color="tertiary" icon={sunny} slot="end" />
                 </IonRange>
           </IonItem>
           <IonItem>
                 <IonLabel position='fixed'>Fanciness</IonLabel>
-                    <IonRange value={fanciness} step={.02} min={0} max={1}
+                    <IonRange color='secondary' value={fanciness} step={.02} min={0} max={1}
                         onIonChange={e =>
                             setFanciness(roundNumber(e.detail.value.valueOf() as number))
                         }>
-                    <IonIcon icon={trashBin} slot="start"/>
-                    <IonIcon icon={sparkles} slot="end"/>
+                        <IonIcon color="tertiary" icon={trashBin} slot="start" />
+                        <IonIcon color="tertiary" icon={sparkles} slot="end" />
                 </IonRange>
           </IonItem>
           <IonItem>
                 <IonLabel position='fixed'>Mood</IonLabel>
-                    <IonRange pin={false} value={mood} step={.02} min={0} max={1}
+                    <IonRange color='secondary' pin={false} value={mood} step={.02} min={0} max={1}
                         onIonChange={e =>
                             setMood(roundNumber(e.detail.value.valueOf() as number))
                         }>
-                    <IonIcon icon={skullSharp} slot="start"/>
-                    <IonIcon icon={heart} slot="end"/>
+                        <IonIcon color="tertiary" icon={skullSharp} slot="start" />
+                        <IonIcon color="tertiary" icon={heart} slot="end" />
                 </IonRange>
           </IonItem>
         </IonContent>

@@ -28,35 +28,36 @@ let reducer = (state: any, action: {type: string, data?: any}) => {
             state = action.data;
             break;
         case "setWeather":
-            state = {...state, weather: action.data, cityName: action.data.name};
+            state = { ...state, weather: action.data, cityName: action.data.name, isSaving: true };
             break;
         case "setWeatherScores":
             state = {...state, weatherScores: WeatherApi.buildWeatherData(state.weather)};
             break;
         case "setLocation":
-            state = {...state, location: {longitude: action.data.longitude, latitude: action.data.latitude}};
+            state = { ...state, location: { longitude: action.data.longitude, latitude: action.data.latitude }, isSaving: true };
             break;
         case "setSetting":
             let settings = {...state.settings}
             settings[action.data.type] = action.data.value
-            state = {...state, settings}
+            state = { ...state, settings, isSaving: true }
             break;
         case "updateLocLookup":
             let d = new Date();
-            state = {...state, lastLocLookup: d.toISOString()}
+            state = { ...state, lastLocLookup: d.toISOString(), isSaving: true }
             break;
         case "createPerfume":
             perfume[action.data.id] = action.data
-            state = {...state, perfume}
-            console.log("Saving")
+            state = { ...state, perfume, isSaving: true }
             break;
         case "deletePerfume":
             perfume[action.data] = undefined
-            state = {...state, perfume}
-            console.log("deleting")
+            state = { ...state, perfume, isSaving: true }
             break;
+        case "setSaving":
+            state = { ...state, isSaving: action.data }
 
   }
+    state = { ...state }
   console.log(state)
   return state;
 };
@@ -91,14 +92,16 @@ function AppContextProvider(props: any) {
     }, [loaded])
 
     useEffect(() => {
-        if (!loaded){return}
+        if (!state.isSaving) { return }
+        console.log(state.isSaving)
         try{
-            storage.set("state", state)
+            storage.set("state", state);
+            dispatch({ type: "setSaving", data: false })
         } catch {
             console.log("error")
         }
         return
-    }, [state])
+    }, [state.isSaving])
 
     useEffect(() => {
         if (!state.weather) { return }

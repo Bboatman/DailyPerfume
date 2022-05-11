@@ -17,7 +17,7 @@ const Recommend: React.FC = () => {
   const [matchRec, setMatchRec] = useState<any>();
   
   const generateRecommendations = () => {
-      let allPerfumes: any[] = Object.values(state.perfume).filter(elem => elem != undefined);
+    let allPerfumes: any[] = Object.values(state.perfume).filter(elem => elem !== undefined);
     if (state.weatherScores) {
         let mScore = state.settings.mood ? mood : 1 - mood
         let fScore = state.settings.fanciness ? fanciness : 1 - fanciness;
@@ -35,12 +35,9 @@ const Recommend: React.FC = () => {
       scoreArr.sort((a, b) => (a.score > b.score) ? 1 : -1)
       let arrLen = scoreArr.length;
       setMatchRec({
-        match1: scoreArr[0].id,
-        match2: arrLen > 3 ? scoreArr[1].id : undefined,
-        match3: arrLen > 5 ? scoreArr[2].id : undefined,
-        break1: scoreArr[arrLen - 1].id,
-        break2: arrLen > 3 ? scoreArr[arrLen - 2].id : undefined,
-        break3: arrLen > 5 ? scoreArr[arrLen - 4].id : undefined,
+        match: scoreArr[0].id,
+        break: scoreArr[arrLen - 1].id,
+        mid: scoreArr[Math.floor(arrLen / 2)].id
       });
       }
   }
@@ -73,16 +70,16 @@ const Recommend: React.FC = () => {
         <IonList style={{ marginTop: 30 }}>
         <IonItem>
               <IonLabel position='fixed'>Fanciness</IonLabel>
-              <IonRange value={fanciness} step={.1} min={0} max={1} onIonChange={e => setFanciness(e.detail.value.valueOf() as number)}>
-                  <IonIcon icon={trashBin} slot="start"/>
-                  <IonIcon icon={sparkles} slot="end"/>
+            <IonRange color='secondary' value={fanciness} step={.1} min={0} max={1} onIonChange={e => setFanciness(e.detail.value.valueOf() as number)}>
+              <IonIcon color="tertiary" icon={trashBin} slot="start" />
+              <IonIcon color="tertiary" icon={sparkles} slot="end" />
               </IonRange>
         </IonItem>
         <IonItem>
               <IonLabel position='fixed'>Mood</IonLabel>
-              <IonRange pin={false} value={mood} step={.1} min={0} max={1} onIonChange={e => setMood(e.detail.value as number)}>
-                  <IonIcon icon={skullSharp} slot="start"/>
-                  <IonIcon icon={heart} slot="end"/>
+            <IonRange color='secondary' pin={false} value={mood} step={.1} min={0} max={1} onIonChange={e => setMood(e.detail.value as number)}>
+              <IonIcon color="tertiary" icon={skullSharp} slot="start" />
+              <IonIcon color="tertiary" icon={heart} slot="end" />
               </IonRange>
           </IonItem>
         </IonList>
@@ -98,41 +95,17 @@ const Recommend: React.FC = () => {
             scrollbar={{ draggable: true }}
             loop={true}
           >
-            {matchRec.match1 && state.perfume[matchRec.match1] &&
+            {matchRec.match && state.perfume[matchRec.match] &&
               (<SwiperSlide>
-                <RecommendationCard perfumeId={matchRec.match1} cardHeader="Match Recommendation" />
+              <RecommendationCard perfumeId={matchRec.match} cardHeader="Match Recommendation" />
               </SwiperSlide>)}
-            {matchRec.match2 && state.perfume[matchRec.match2] &&
+            {matchRec.break && state.perfume[matchRec.break] &&
               (<SwiperSlide>
-                <RecommendationCard perfumeId={matchRec.match2} cardHeader="Match Recommendation" />
+              <RecommendationCard perfumeId={matchRec.break} cardHeader="Break The Mould" />
               </SwiperSlide>)}
-            {matchRec.match3 && state.perfume[matchRec.match3] &&
+            {matchRec.mid && state.perfume[matchRec.mid] &&
               (<SwiperSlide>
-                <RecommendationCard perfumeId={matchRec.match3} cardHeader="Match Recommendation" />
-              </SwiperSlide>)}
-          </Swiper>
-        }
-
-        {matchRec &&
-          <Swiper
-            height={1}
-            spaceBetween={1}
-            slidesPerView={1}
-            pagination={{ clickable: true }}
-            scrollbar={{ draggable: true }}
-            loop={true}
-          >
-            {matchRec.break1 && state.perfume[matchRec.break1] &&
-              (<SwiperSlide>
-                <RecommendationCard perfumeId={matchRec.break1} cardHeader="Break the Mould" />
-              </SwiperSlide>)}
-            {matchRec.break2 && state.perfume[matchRec.break2] &&
-              (<SwiperSlide>
-                <RecommendationCard perfumeId={matchRec.break2} cardHeader="Break the Mould" />
-              </SwiperSlide>)}
-            {matchRec.break3 && state.perfume[matchRec.break3] &&
-              (<SwiperSlide>
-                <RecommendationCard perfumeId={matchRec.break3} cardHeader="Break the Mould" />
+              <RecommendationCard perfumeId={matchRec.mid} cardHeader="Split the Difference" />
               </SwiperSlide>)}
           </Swiper>
         }

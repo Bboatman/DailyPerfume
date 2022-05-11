@@ -20,7 +20,7 @@ Find some way to standardized from weather api
 
 # Get user input for fanciness and mood [x]
 
-# Get scents for user and persist locally somehow
+# Get scents for user and persist locally somehow [x]
 
 ## Manually enter perfume [x]
 
@@ -36,11 +36,11 @@ Gloom Factor [x]
 
 Fanciness Factor [x]
 
-# Rank perfume against user response
+# Rank perfume against user response [x]
 
 Use user entered data to generate perfume score vector
 
-# Match perfume
+# Match perfume [x]
 
 Compare each perfume score against user's current score
 [weather_metric, mood_metric, fanciness_metric]
