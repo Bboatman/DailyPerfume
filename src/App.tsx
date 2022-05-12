@@ -11,7 +11,6 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, square, triangle } from 'ionicons/icons';
-import Weather from './pages/Weather/Weather';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -44,10 +43,7 @@ const App: React.FC = () => (
     <IonReactRouter>
       <AppContextProvider>
       <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/weather">
-            <Weather />
-          </Route>
+          <IonRouterOutlet>
           <Route exact path="/recommend">
             <Recommend />
           </Route>
@@ -65,11 +61,7 @@ const App: React.FC = () => (
             <Redirect to="/recommend" />
           </Route>
         </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/weather">
-            <IonIcon icon={triangle} />
-            <IonLabel>Weather</IonLabel>
-          </IonTabButton>
+          <IonTabBar slot="bottom">
           <IonTabButton tab="tab2" href="/recommend">
             <IonIcon icon={ellipse} />
             <IonLabel>Recommend</IonLabel>

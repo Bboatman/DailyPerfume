@@ -1,4 +1,3 @@
-import './ExploreContainer.css';
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonFooter, IonIcon, IonLabel, IonTabBar, IonTabButton, IonToolbar } from '@ionic/react';
 import { useContext } from 'react'
 import { AppContext } from '../contexts/AppContext';

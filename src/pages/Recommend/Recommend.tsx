@@ -1,6 +1,6 @@
-import { IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonPage, IonRange, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import { IonCard, IonCardContent, IonCardHeader, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonPage, IonRange, IonTitle, IonToolbar } from '@ionic/react';
 import { trashBin, sparkles, skullSharp, heart } from 'ionicons/icons';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AppHeader from '../../components/AppHeader';
 import RecommendationCard from '../../components/RecommendationCard';
 import { AppContext } from '../../contexts/AppContext';
@@ -10,12 +10,25 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
 const Recommend: React.FC = () => {
-  const { state } = useContext(AppContext);
-
+  const ctx = useContext(AppContext);
+  const { state, doWeatherCheck } = ctx;
   const [fanciness, setFanciness] = useState(.5)
   const [mood, setMood] = useState(.5);
   const [matchRec, setMatchRec] = useState<any>();
-  
+
+  useEffect(() => {
+    if (!state || !state.perfume || doWeatherCheck === undefined || Object.values(state.perfume).length == 0) {
+      return
+    }
+    getRecommendations();
+  }, [state.perfume, fanciness, mood, state.lastLocLookup, doWeatherCheck])
+
+  const getRecommendations = async () => {
+    if (doWeatherCheck === undefined) { return }
+    await doWeatherCheck();
+    generateRecommendations();
+  }
+
   const generateRecommendations = () => {
     let allPerfumes: any[] = Object.values(state.perfume).filter(elem => elem !== undefined);
     if (state.weatherScores) {
@@ -83,15 +96,17 @@ const Recommend: React.FC = () => {
               </IonRange>
           </IonItem>
         </IonList>
-        <IonRow style={{ justifyContent: "space-around", alignItems: "center", marginTop: 10 }}>
-          <IonButton onClick={generateRecommendations} style={{ width: "50%" }}>Recommend</IonButton>
-        </IonRow>
-        {matchRec &&
+        {!matchRec && (<h1>Loading</h1>)}
+        {Object.values(state?.perfume).length == 0 && (
+          <IonCard href='/create'>
+            <IonCardHeader>You have no perfumes!</IonCardHeader>
+            <IonCardContent>Press here to start adding some</IonCardContent>
+          </IonCard>
+        )}
+        {matchRec && 
           <Swiper
             spaceBetween={1}
             slidesPerView={1}
-            pagination={{ clickable: true }}
-            scrollbar={{ draggable: true }}
             loop={true}
           >
             {matchRec.match && state.perfume[matchRec.match] &&

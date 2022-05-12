@@ -14,11 +14,14 @@ let initialState = {
 }
 
 const AppContext = createContext<{
-        state: any;
-        dispatch: React.Dispatch<any>;
-    }>({
+    state: any,
+    dispatch: React.Dispatch<any>,
+    doWeatherCheck: any
+}
+>({
         state: initialState,
-        dispatch: (action: {type: string, data?: any}) => null
+    dispatch: (action: { type: string, data?: any }) => null,
+    doWeatherCheck: async () => null
     });
 
 let reducer = (state: any, action: {type: string, data?: any}) => {
@@ -70,7 +73,6 @@ function AppContextProvider(props: any) {
     const [state, dispatch] = useReducer(reducer, fullInitialState);
     const [storage] = useState(new Storage());
     const [loaded, setLoaded] = useState(false);
-    let value: any = { state, dispatch};
 
     useEffect(() => {
         if (!storage){return}
@@ -79,15 +81,7 @@ function AppContextProvider(props: any) {
     }, [storage])
 
     useEffect(() => {
-        if (loaded){
-            let startDate = new Date(state.lastLocLookup);
-            let endDate = new Date()
-            var minutes = (endDate.getTime() - startDate.getTime()) / 60000 ;
-            if (minutes > 10 || !state.lastLocLookup){
-                findLocation();
-                dispatch({type: "updateLocLookup"})
-            }
-        }
+        doWeatherCheck();
         return;
     }, [loaded])
 
@@ -119,8 +113,6 @@ function AppContextProvider(props: any) {
 
         let savedState: any = await storage.get("state");
 
-        console.log("intializing", savedState);
-
         dispatch({type: "setAll", data: savedState ?? initialState})
         setLoaded(true)
     }
@@ -135,6 +127,22 @@ function AppContextProvider(props: any) {
         dispatch({type: "setWeather", data: w})
         return
     };
+
+    const doWeatherCheck = async () => {
+        if (loaded) {
+            let startDate = new Date(state.lastLocLookup);
+            let endDate = new Date()
+            var minutes = (endDate.getTime() - startDate.getTime()) / 60000;
+            console.log("Checking last lookup")
+            if (minutes > 10 || !state.lastLocLookup) {
+                console.log("Getting weather")
+                findLocation();
+                dispatch({ type: "updateLocLookup" })
+            }
+        }
+    }
+
+    let value: any = { state, dispatch, doWeatherCheck };
 
     return (
         <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
