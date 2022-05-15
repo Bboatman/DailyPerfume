@@ -21,7 +21,7 @@ const Recommend: React.FC = () => {
       return
     }
     getRecommendations();
-  }, [state.perfume, fanciness, mood, state.lastLocLookup, doWeatherCheck])
+  }, [state.perfume, fanciness, mood, state.lastLocLookup, doWeatherCheck, state.weatherScores])
 
   const getRecommendations = async () => {
     if (doWeatherCheck === undefined) { return }
@@ -47,11 +47,16 @@ const Recommend: React.FC = () => {
         
       scoreArr.sort((a, b) => (a.score < b.score) ? 1 : -1)
       let arrLen = scoreArr.length;
-      setMatchRec({
+      let matchRec = {
         match: scoreArr[0].id,
         break: scoreArr[arrLen - 1].id,
         mid: scoreArr[Math.floor(arrLen / 2)].id
-      });
+      }
+      setMatchRec(matchRec);
+      console.log(matchRec)
+    } else {
+      console.log("No weather data");
+      console.log(state);
       }
   }
 
@@ -96,7 +101,6 @@ const Recommend: React.FC = () => {
               </IonRange>
           </IonItem>
         </IonList>
-        {!matchRec && (<h1>Loading</h1>)}
         {Object.values(state?.perfume).length == 0 && (
           <IonCard href='/create'>
             <IonCardHeader>You have no perfumes!</IonCardHeader>

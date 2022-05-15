@@ -49,4 +49,8 @@ Compare each perfume score against user's current score
 
 ## User preference page for each metric with 'inverted' toggle [x]
 
-# Add default loading screen until app context catches up
+# Warn users about bad states
+## Add no perfumes warning [X]
+## Add offline warning 
+## Add permissions warning
+

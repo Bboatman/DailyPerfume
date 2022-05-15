@@ -73,6 +73,7 @@ function AppContextProvider(props: any) {
     const [state, dispatch] = useReducer(reducer, fullInitialState);
     const [storage] = useState(new Storage());
     const [loaded, setLoaded] = useState(false);
+    const [weatherLoading, setWeatherLoading] = useState(false)
 
     useEffect(() => {
         if (!storage){return}
@@ -81,6 +82,8 @@ function AppContextProvider(props: any) {
     }, [storage])
 
     useEffect(() => {
+        if (!loaded || weatherLoading) { return }
+        console.log("Firing weather check")
         doWeatherCheck();
         return;
     }, [loaded])
@@ -118,27 +121,40 @@ function AppContextProvider(props: any) {
     }
 
     const findLocation = async () => {
-        console.log("Finding weather / location");
-
+        console.log("In location")
         const data = await Geolocation.getCurrentPosition();
+        console.log("got coords", data.coords.latitude, data.coords.longitude)
         dispatch({type: "setLocation", data: data.coords})
 
         let w = await WeatherApi.getWeatherForLocation(data.coords.latitude, data.coords.longitude);
+        console.log(w)
         dispatch({type: "setWeather", data: w})
+        setWeatherLoading(false)
         return
     };
 
     const doWeatherCheck = async () => {
-        if (loaded) {
-            let startDate = new Date(state.lastLocLookup);
-            let endDate = new Date()
-            var minutes = (endDate.getTime() - startDate.getTime()) / 60000;
-            console.log("Checking last lookup")
-            if (minutes > 10 || !state.lastLocLookup) {
-                console.log("Getting weather")
+        if (loaded && !weatherLoading) {
+            setWeatherLoading(true)
+            console.log("In weather check", state.lastLocLookup)
+            if (state.lastLocLookup === undefined || !state.lastLocLookup || !state.weatherScores) {
+                console.log("Getting weather, lookup undefined")
                 findLocation();
                 dispatch({ type: "updateLocLookup" })
+            } else {
+                console.log("Getting weather from last time")
+                let startDate = new Date(state.lastLocLookup);
+                let endDate = new Date()
+                var minutes = (endDate.getTime() - startDate.getTime()) / 60000;
+                console.log(minutes)
+                if (minutes > 5) { //TODO: Change back to 10
+                    console.log("Getting weather from last time")
+                    findLocation();
+                    dispatch({ type: "updateLocLookup" })
+                }
             }
+        } else {
+            console.log("Not loaded")
         }
     }
 
