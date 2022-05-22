@@ -58,7 +58,6 @@ const WeatherApi = {
         let heatLevel: number = this.getHeatLevel(data);
         let temp: string = this.temperatureToString(heatLevel);
         let gloom: number = this.getGloomLevel(data);
-
         return {
             heatLevel,
             temp,

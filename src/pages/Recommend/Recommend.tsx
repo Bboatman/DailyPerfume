@@ -53,11 +53,7 @@ const Recommend: React.FC = () => {
         mid: scoreArr[Math.floor(arrLen / 2)].id
       }
       setMatchRec(matchRec);
-      console.log(matchRec)
-    } else {
-      console.log("No weather data");
-      console.log(state);
-      }
+    }
   }
 
   const getCosineSimilarity = (A: number[],B: number[]) =>{
