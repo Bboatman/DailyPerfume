@@ -51,14 +51,16 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
     useEffect(() => {
         if (!state.perfume) { return }
         if (!house || house.length === 0) {
-            setAutoCompleteList(Object.values(state.perfume).map((elem: any) => elem.house))
+            let autoList: string[] = Object.values(state.perfume).map((elem: any) => elem.house.trim());
+            autoList = Array.from(new Set<string>(autoList))
+            setAutoCompleteList(autoList)
         }
         let filtered = Object.values(state.perfume).filter((elem: any) => {
             return elem.house.toLowerCase().includes(house?.toLowerCase())
         });
-        let autoList: string[] = (filtered && filtered.length > 0) ? filtered.map((elem: any) => elem.house) : []
+        let autoList: string[] = (filtered && filtered.length > 0) ? filtered.map((elem: any) => elem.house.trim()) : []
+        autoList = Array.from(new Set<string>(autoList))
         setAutoCompleteList(autoList);
-        console.log(autoList)
     }, [house, state.perfume])
 
     const handlePerfumeCreation = () => {
