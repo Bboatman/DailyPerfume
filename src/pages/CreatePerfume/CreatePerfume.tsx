@@ -24,6 +24,7 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
     const [temp, setTemp] = useState<number>(3)
     const [shouldLeave, setShouldLeave] = useState<boolean>(false);
     const [autoCompleteList, setAutoCompleteList] = useState<string[]>([])
+    const [houseIsDirty, setHouseIsDirty] = useState<boolean>(false)
     
     const {state, dispatch} = useContext(AppContext)
     const history = useHistory();
@@ -48,7 +49,7 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
     }, [state.isSaving, shouldLeave])
 
     useEffect(() => {
-        if (!state.perfume || match) { return }
+        if (!state.perfume) { return }
         if (!house || house.length === 0) {
             setAutoCompleteList(Object.values(state.perfume).map((elem: any) => elem.house))
         }
@@ -56,7 +57,8 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
             return elem.house.toLowerCase().includes(house?.toLowerCase())
         });
         let autoList: string[] = (filtered && filtered.length > 0) ? filtered.map((elem: any) => elem.house) : []
-        setAutoCompleteList(autoList)
+        setAutoCompleteList(autoList);
+        console.log(autoList)
     }, [house, state.perfume])
 
     const handlePerfumeCreation = () => {
@@ -117,7 +119,12 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
                             id="house-input"
                             value={house}
                             inputMode={"text"}
-                            onIonChange={e => setHouse(e.detail.value!)}>
+                            onIonChange={e => {
+                                setHouse(e.detail.value!);
+                                if (e.detail.value != state.perfume[id]?.house || !state.perfume) {
+                                    setHouseIsDirty(true);
+                                }
+                            }}>
                         </IonInput>
                         <IonPopover
                             trigger="house-input"
@@ -128,7 +135,7 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
                             showBackdrop={false}
                             keyboardClose={false}
                             dismissOnSelect={true}
-                            isOpen={house !== undefined && house !== null && house?.length > 0 && autoCompleteList.length > 0 && !match}
+                            isOpen={house !== undefined && house !== null && house?.length > 0 && autoCompleteList.length > 0 && houseIsDirty}
                             arrow={false}>
                             <IonContent>
                                 <IonList>
