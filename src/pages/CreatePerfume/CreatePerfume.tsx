@@ -35,10 +35,14 @@ export interface Perfume {
 
 const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
     const [perfume, setPerfume] = useState<Perfume>({
-        id: match.params.id ?? Math.random().toString(36).replace(/[^a-z]+/g, '').substring(0, 15)
+        id: match.params.id ?? Math.random().toString(36).replace(/[^a-z]+/g, '').substring(0, 15),
+        gloom: .5,
+        temp: 3,
+        fanciness: .5,
+        mood: .5
     })
     const [shouldLeave, setShouldLeave] = useState<boolean>(false);
-    const [isEditing, setIsEditing] = useState<boolean>(false)
+    const [isEditing, setIsEditing] = useState<boolean>(true)
     const [hasReview, setHasReview] = useState<boolean>(false)
 
     const { state, dispatch } = useContext(AppContext)
@@ -63,20 +67,17 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
     useEffect(() => {
         let id = match.params.id;
         if (perfume) {
-            id = perfume.id;
+            id = perfume.id
         }
-        if (!id) {
-            setIsEditing(true)
+        if ((!id || (id && !Object.hasOwn(state.perfume, id)))) {
             return
-        }
-        if ((!state && Object.hasOwn(state.perfume, id)) || state.isSaving) { return }
-        if (!Object.hasOwn(state.perfume, id)) {
-            return
+        } else {
+            setIsEditing(false)
         }
         let p = state.perfume[id];
         setPerfume(p);
         return
-    }, [match.params.id, state])
+    }, [match.params.id, state.perfume])
 
     useEffect(() => {
         if (perfume.silage || perfume.throw || perfume.inBottle || perfume.wet || perfume.dried || perfume.oneHour || perfume.threeHour) {

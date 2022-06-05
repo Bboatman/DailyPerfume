@@ -66,9 +66,9 @@ const Perfume: React.FC = () => {
         </IonHeader>        
 
         <IonList>
-          <IonItemGroup>
+          <IonItemGroup key={"searchGroup"}>
             <IonSearchbar placeholder='Search by house, note, or name' value={searchText} onIonChange={e => setSearchText(e.detail.value!)}></IonSearchbar>
-            <IonItem key="sort">
+            <IonItem key="sortField">
               <IonLabel>Sort By</IonLabel>
               <IonSelect
                 key="sortType"
@@ -78,12 +78,12 @@ const Perfume: React.FC = () => {
                 onIonChange={e => setSort(e.detail.value)}
                 value={sortVal}
               >
-                <IonSelectOption value="title">Name</IonSelectOption>
-                <IonSelectOption value="house">House</IonSelectOption>
-                <IonSelectOption value="temp">Temperature</IonSelectOption>
-                <IonSelectOption value="gloom">Gloom</IonSelectOption>
-                <IonSelectOption value="fanciness">Fanciness</IonSelectOption>
-                <IonSelectOption value="mood">Mood</IonSelectOption>
+                <IonSelectOption key={"titleSelect"} value="title">Name</IonSelectOption>
+                <IonSelectOption key={"houseSelect"} value="house">House</IonSelectOption>
+                <IonSelectOption key={"tempSelect"} value="temp">Temperature</IonSelectOption>
+                <IonSelectOption key={"gloomSelect"} value="gloom">Gloom</IonSelectOption>
+                <IonSelectOption key={"fancinessSelect"} value="fanciness">Fanciness</IonSelectOption>
+                <IonSelectOption key={"moodSelect"} value="mood">Mood</IonSelectOption>
               </IonSelect>
               <IonButton fill='clear' onClick={() => setDirection(!direction)}>
                 {direction ?
@@ -93,7 +93,7 @@ const Perfume: React.FC = () => {
             </IonItem>
 
           </IonItemGroup>
-          <IonItemGroup>
+          <IonItemGroup key="perfumeGroup">
             {localPerfumes && localPerfumes.map((p: any) => p && (
               <IonItem key={p.id} href={'perfume/' + p.id}>
                 <IonLabel>

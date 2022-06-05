@@ -1,5 +1,5 @@
 import { IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonRange, IonTextarea } from '@ionic/react';
-import { flame, heart, skullSharp, snow, sparkles, sunny, thunderstorm, trashBin } from 'ionicons/icons';
+import { flame, heart, skullSharp, snow, sparkles, sunny, thunderstorm, trashBin, chevronDown, chevronUp } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 
 import './CreatePerfume.css';
@@ -110,8 +110,8 @@ const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<P
                     onIonChange={e =>
                         setPerfume({ ...perfume, silage: roundNumber(e.detail.value.valueOf() as number) })
                     }>
-                    <IonIcon color="tertiary" icon={thunderstorm} slot="start" />
-                    <IonIcon color="tertiary" icon={sunny} slot="end" />
+                    <IonIcon color="tertiary" icon={chevronDown} slot="start" />
+                    <IonIcon color="tertiary" icon={chevronUp} slot="end" />
                 </IonRange>
             </IonItem>
             <IonItem>
@@ -120,8 +120,8 @@ const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<P
                     onIonChange={e =>
                         setPerfume({ ...perfume, throw: roundNumber(e.detail.value.valueOf() as number) })
                     }>
-                    <IonIcon color="tertiary" icon={thunderstorm} slot="start" />
-                    <IonIcon color="tertiary" icon={sunny} slot="end" />
+                    <IonIcon color="tertiary" icon={chevronDown} slot="start" />
+                    <IonIcon color="tertiary" icon={chevronUp} slot="end" />
                 </IonRange>
             </IonItem>
             <IonItem>
