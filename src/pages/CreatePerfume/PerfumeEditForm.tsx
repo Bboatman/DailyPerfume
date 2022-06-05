@@ -1,4 +1,4 @@
-import { IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonRange, IonTextarea } from '@ionic/react';
+import { IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonRange, IonTextarea, IonToggle } from '@ionic/react';
 import { flame, heart, skullSharp, snow, sparkles, sunny, thunderstorm, trashBin, chevronDown, chevronUp } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 
@@ -60,6 +60,16 @@ const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<P
                     value={perfume.description}
                     onIonChange={e => setPerfume({ ...perfume, description: e.detail.value! })}>
                 </IonTextarea>
+            </IonItem>
+            <IonItem>
+                <IonLabel>Is Empty</IonLabel>
+                <IonToggle
+                    slot='end'
+                    checked={perfume.isEmpty}
+                    onIonChange={e => {
+                        setPerfume({ ...perfume, isEmpty: e.detail.checked })
+                    }}>
+                </IonToggle>
             </IonItem>
             <IonItemDivider />
             <IonItem>

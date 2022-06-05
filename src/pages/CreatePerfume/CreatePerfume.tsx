@@ -31,6 +31,7 @@ export interface Perfume {
     oneHour?: string,
     threeHour?: string,
     dried?: string
+    isEmpty?: boolean
 }
 
 const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {

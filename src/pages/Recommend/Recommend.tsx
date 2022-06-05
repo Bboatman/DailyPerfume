@@ -32,7 +32,7 @@ const Recommend: React.FC = () => {
   }
 
   const generateRecommendations = () => {
-    let allPerfumes: any[] = Object.values(state.perfume).filter((elem: any) => { return (elem !== undefined && !state.lastWorn?.includes(elem?.id)) });
+    let allPerfumes: any[] = Object.values(state.perfume).filter((elem: any) => { return (elem !== undefined && !state.lastWorn?.includes(elem?.id) && !elem.isEmpty) });
     if (state.weatherScores) {
         let mScore = state.settings.mood ? mood : 1 - mood
         let fScore = state.settings.fanciness ? fanciness : 1 - fanciness;
