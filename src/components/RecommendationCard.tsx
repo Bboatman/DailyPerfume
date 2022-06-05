@@ -9,7 +9,7 @@ interface ContainerProps {
 }
 
 const RecommendationCard: React.FC<ContainerProps> = ({ perfumeId, cardHeader }) => {
-    const { state } = useContext(AppContext);
+    const { state, dispatch } = useContext(AppContext)
     const iconLabelMap: any = {
         sad: (<IonTabButton tab="sad">
             <IonIcon color="primary" size="large" icon={skullSharp} />
@@ -64,7 +64,11 @@ const RecommendationCard: React.FC<ContainerProps> = ({ perfumeId, cardHeader })
                     <IonToolbar style={{ marginTop: 10 }}>
                         <IonCardTitle>{state.perfume[perfumeId].title}</IonCardTitle>
                         <IonCardSubtitle>{state.perfume[perfumeId].house}</IonCardSubtitle>
-                        <IonButton style={{ marginLeft: 10 }} fill='outline' color='secondary' slot='end'>Wear It</IonButton>
+                        <IonButton style={{ marginLeft: 10 }} fill='outline' color='secondary' slot='end'
+                            onClick={() => {
+                                console.log(perfumeId)
+                                dispatch({ type: "setWear", data: perfumeId });
+                            }}>Wear It</IonButton>
                     </IonToolbar>
                 </IonCardHeader>
 

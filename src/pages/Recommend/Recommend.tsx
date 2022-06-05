@@ -9,6 +9,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import './Recommend.css'
 import { Pagination } from "swiper";
+import { Perfume } from '../CreatePerfume/CreatePerfume';
 
 const Recommend: React.FC = () => {
   const ctx = useContext(AppContext);
@@ -31,7 +32,7 @@ const Recommend: React.FC = () => {
   }
 
   const generateRecommendations = () => {
-    let allPerfumes: any[] = Object.values(state.perfume).filter(elem => elem !== undefined);
+    let allPerfumes: any[] = Object.values(state.perfume).filter((elem: any) => { return (elem !== undefined && !state.lastWorn?.includes(elem?.id)) });
     if (state.weatherScores) {
         let mScore = state.settings.mood ? mood : 1 - mood
         let fScore = state.settings.fanciness ? fanciness : 1 - fanciness;

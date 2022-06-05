@@ -10,6 +10,7 @@ let initialState = {
         mood: true,
         fanciness: true
     }, 
+    lastWorn: [],
     perfume: {}
 }
 
@@ -26,6 +27,8 @@ const AppContext = createContext<{
 
 let reducer = (state: any, action: {type: string, data?: any}) => {
     const perfume = {...state.perfume};
+    const max = Math.floor(Object.keys(state.perfume).length / 3)
+    const upperLimitFilter = max < 7 ? max : 7;
     switch(action.type) {
         case "setAll":
             state = action.data;
@@ -58,6 +61,19 @@ let reducer = (state: any, action: {type: string, data?: any}) => {
             break;
         case "setSaving":
             state = { ...state, isSaving: action.data }
+            break;
+        case "setWear":
+            console.log(state.lastWorn)
+            let lastWorn: string[] = state.lastWorn ? [...state.lastWorn] : [];
+            if (lastWorn.length >= upperLimitFilter) {
+                lastWorn = lastWorn.slice(1, lastWorn.length)
+            }
+            if (!lastWorn.includes(action.data)) {
+                lastWorn.push(action.data);
+                console.log(lastWorn)
+                state = { ...state, lastWorn: lastWorn, isSaving: true }
+            }
+            break;
 
   }
     state = { ...state }
