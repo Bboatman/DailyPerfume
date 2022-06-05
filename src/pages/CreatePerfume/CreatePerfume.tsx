@@ -1,5 +1,5 @@
 import { IonBackButton, IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonFooter, IonHeader, IonIcon, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonPage, IonPopover, IonTitle, IonToolbar } from '@ionic/react';
-import { trashBin, close, pencil } from 'ionicons/icons';
+import { trashBin, close, pencilSharp } from 'ionicons/icons';
 import { useContext, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import AppHeader from '../../components/AppHeader';
@@ -155,7 +155,7 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
                 }
                 <IonFab vertical="bottom" horizontal="end" slot="fixed">
                     <IonFabButton onClick={() => setIsEditing(!isEditing)}>
-                        <IonIcon icon={isEditing ? close : pencil} />
+                        <IonIcon size='small' icon={isEditing ? close : pencilSharp} />
                     </IonFabButton>
                 </IonFab>
             </IonContent>

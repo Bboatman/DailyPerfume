@@ -44,12 +44,12 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-warning-tint: #FFF9EB;
 
   /** danger **/
-  --ion-color-danger: #eb445a;
+  --ion-color-danger: #DE7D91;
   --ion-color-danger-rgb: 235, 68, 90;
   --ion-color-danger-contrast: #ffffff;
   --ion-color-danger-contrast-rgb: 255, 255, 255;
-  --ion-color-danger-shade: #cf3c4f;
-  --ion-color-danger-tint: #ed576b;
+  --ion-color-danger-shade: #DE7D91;
+    --ion-color-danger-tint: #E69EAC;
 
   /** dark **/
   --ion-color-dark: #222428;
