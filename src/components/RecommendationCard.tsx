@@ -1,4 +1,4 @@
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonFooter, IonIcon, IonLabel, IonTabBar, IonTabButton, IonText, IonToolbar } from '@ionic/react';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonFooter, IonIcon, IonItem, IonLabel, IonNote, IonRange, IonTabBar, IonTabButton, IonText, IonToolbar } from '@ionic/react';
 import { useContext } from 'react'
 import { AppContext } from '../contexts/AppContext';
 import { skullSharp, heart, trashBin, sparkles, snow, flame, thunderstorm, sunny } from 'ionicons/icons';
@@ -58,7 +58,7 @@ const RecommendationCard: React.FC<ContainerProps> = ({ perfumeId, cardHeader })
     }
     return (
         <IonCard style={{ height: 380, marginBottom: 50 }}>
-            <div style={{ height: 310 }}>
+            <div style={{ height: (250 + (state.perfume[perfumeId].silage ? 0 : 30) + (state.perfume[perfumeId].throw ? 0 : 30)) }}>
                 <IonCardHeader>
                     <IonCardSubtitle color='secondary'>{cardHeader}</IonCardSubtitle>
                     <IonToolbar style={{ marginTop: 10 }}>
@@ -75,21 +75,24 @@ const RecommendationCard: React.FC<ContainerProps> = ({ perfumeId, cardHeader })
                 <IonCardContent>
                     <div style={{ height: 200, overflow: 'scroll' }}>
                         <IonText><p>{state.perfume[perfumeId].description}</p></IonText>
-                        <br />
-                        {state.perfume[perfumeId].silage &&
-                            <IonText>
-                                <p>Silage: {state.perfume[perfumeId].silage}</p>
-                            </IonText>
-                        }
-                        {state.perfume[perfumeId].throw &&
-                            <IonText>
-                                <p>Throw: {state.perfume[perfumeId].throw}</p>
-                            </IonText>
-                        }
                     </div>
                 </IonCardContent>
             </div>
             <IonFooter>
+                <div>
+                    {state.perfume[perfumeId].silage &&
+                        <IonItem lines='none' style={{ height: 30, padding: 0, margin: 0 }}>
+                            <p slot='start' style={{ fontSize: 12 }}>Silage</p>
+                            <IonRange style={{ height: 10, width: "80%" }} disabled={true} value={state.perfume[perfumeId].silage} step={.02} min={0} max={1} />
+                        </IonItem>
+                    }
+                    {state.perfume[perfumeId].throw &&
+                        <IonItem lines='none' style={{ height: 30, padding: 0, margin: 0 }}>
+                            <p slot='start' style={{ fontSize: 12 }}>Throw</p>
+                            <IonRange style={{ height: 12, width: "80%" }} disabled={true} value={state.perfume[perfumeId].throw} step={.02} min={0} max={1} />
+                        </IonItem>
+                    }
+                </div>
                 <IonToolbar style={{ marginTop: 10 }}>
                     {generateIconDescriptor(state.perfume[perfumeId])}
                 </IonToolbar>
