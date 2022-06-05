@@ -1,4 +1,4 @@
-import { IonBackButton, IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonFooter, IonHeader, IonIcon, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonPage, IonPopover, IonTitle, IonToolbar } from '@ionic/react';
+import { IonBackButton, IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonFooter, IonHeader, IonIcon, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonNote, IonPage, IonPopover, IonRange, IonTitle, IonToolbar } from '@ionic/react';
 import { trashBin, close, pencilSharp } from 'ionicons/icons';
 import { useContext, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
@@ -134,20 +134,18 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
                             <IonLabel position="stacked">Description</IonLabel>
                             <p>{perfume.description}</p>
                         </IonItem>
-                        <div style={{ width: "100%", display: "flex", justifyContent: "space-around", marginTop: 20 }}>
+                        <div style={{ width: "100%", display: "flex", justifyContent: "space-around", marginTop: 20, marginBottom: 20 }}>
                             {PerfumeIconDisplay(perfume, "large")}
                         </div>
-
-                        {hasReview && <IonItemDivider />}
-                        {hasReview && <IonListHeader>Review Notes</IonListHeader>}
+                        {hasReview && <IonListHeader color='light'>Review Notes</IonListHeader>}
                         {perfume.silage && <IonItem>
-                            <IonLabel position="stacked">Silage</IonLabel>
-                            <p>{perfume.silage}</p>
+                            <IonNote style={{ fontSize: 14, paddingTop: 15 }}>Silage</IonNote>
+                            <IonRange disabled={true} value={perfume.silage} step={.02} min={0} max={1} />
                         </IonItem>}
                         {perfume.throw && <IonItem>
-                            <IonLabel position="stacked">Throw</IonLabel>
-                            <p>{perfume.throw}</p>
-                        </IonItem>}
+                            <IonNote style={{ fontSize: 14, paddingTop: 15 }}>Throw</IonNote>
+                            <IonRange disabled={true} value={perfume.throw} step={.02} min={0} max={1} />
+                        </IonItem>} 
                         {perfume.inBottle && <IonItem>
                             <IonLabel position="stacked">In The Bottle</IonLabel>
                             <p>{perfume.inBottle}</p>
