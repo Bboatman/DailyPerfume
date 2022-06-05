@@ -57,8 +57,8 @@ const RecommendationCard: React.FC<ContainerProps> = ({ perfumeId, cardHeader })
         </IonTabBar>
     }
     return (
-        <IonCard style={{ height: 380, marginBottom: 50 }}>
-            <div style={{ height: (250 + (state.perfume[perfumeId].silage ? 0 : 30) + (state.perfume[perfumeId].throw ? 0 : 30)) }}>
+        <IonCard style={{ height: 420, marginBottom: 50 }}>
+            <div style={{ height: (290 + (state.perfume[perfumeId].silage ? 0 : 30) + (state.perfume[perfumeId].throw ? 0 : 30)) }}>
                 <IonCardHeader>
                     <IonCardSubtitle color='secondary'>{cardHeader}</IonCardSubtitle>
                     <IonToolbar style={{ marginTop: 10 }}>
