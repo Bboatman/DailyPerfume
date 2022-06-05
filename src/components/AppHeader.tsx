@@ -4,7 +4,7 @@ import SettingsToolbar from './SettingsToolbar';
 
 const AppHeader: React.FC<{title: string}> = (props, backlink) => {
   return (
-      <IonHeader style={{verticalPadding: 20, horizontalPadding: 10}}>
+    <IonHeader style={{ verticalPadding: 30, horizontalPadding: 10, backgroundColor: "white" }}>
           {props.children && (<div style={{display: "flex", width: "100%"}}>{props.children}</div>)}
           {!props.children && (<SettingsToolbar>{props.title}</SettingsToolbar>)}
       </IonHeader> 
