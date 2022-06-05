@@ -16,7 +16,7 @@ import {
   IonTitle,
   IonToolbar
 } from '@ionic/react';
-import { add, chevronDownOutline, chevronUpOutline } from 'ionicons/icons';
+import { add, chevronDownOutline, chevronUpOutline, alertCircleOutline } from 'ionicons/icons';
 import { useContext, useEffect, useState } from 'react';
 import AppHeader from '../../components/AppHeader';
 import PerfumeIconDisplay from '../../components/PerfumeIconDisplay';
@@ -96,6 +96,9 @@ const Perfume: React.FC = () => {
           <IonItemGroup key="perfumeGroup">
             {localPerfumes && localPerfumes.map((p: any) => p && (
               <IonItem key={p.id} href={'perfume/' + p.id}>
+                {state.perfume[p.id].isEmpty &&
+                  <IonIcon key="warmIco" color="secondary" size={"large"} icon={alertCircleOutline} />
+                }
                 <IonLabel>
                   <h2>{p?.title}</h2>
                   <h3>{p?.house}</h3>
