@@ -103,17 +103,26 @@ const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<P
                     <IonIcon color="tertiary" icon={heart} slot="end" />
                 </IonRange>
             </IonItem>
-
-            <IonItemDivider />
-
-            <IonListHeader>Review Notes</IonListHeader>
+            <IonListHeader color='light'>Review Notes</IonListHeader>
             <IonItem>
                 <IonLabel position="floating">Silage</IonLabel>
-                <p>{perfume.title}</p>
+                <IonRange color='secondary' value={perfume.silage} step={.02} min={0} max={1}
+                    onIonChange={e =>
+                        setPerfume({ ...perfume, silage: roundNumber(e.detail.value.valueOf() as number) })
+                    }>
+                    <IonIcon color="tertiary" icon={thunderstorm} slot="start" />
+                    <IonIcon color="tertiary" icon={sunny} slot="end" />
+                </IonRange>
             </IonItem>
             <IonItem>
                 <IonLabel position="floating">Throw</IonLabel>
-                <p>{perfume.title}</p>
+                <IonRange color='secondary' value={perfume.throw} step={.02} min={0} max={1}
+                    onIonChange={e =>
+                        setPerfume({ ...perfume, throw: roundNumber(e.detail.value.valueOf() as number) })
+                    }>
+                    <IonIcon color="tertiary" icon={thunderstorm} slot="start" />
+                    <IonIcon color="tertiary" icon={sunny} slot="end" />
+                </IonRange>
             </IonItem>
             <IonItem>
                 <IonLabel position="floating">In The Bottle</IonLabel>
@@ -129,7 +138,6 @@ const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<P
                 <IonTextarea
                     autoGrow={true}
                     inputMode={"text"}
-
                     value={perfume.wet}
                     onIonChange={e => setPerfume({ ...perfume, wet: e.detail.value! })}>
                 </IonTextarea>

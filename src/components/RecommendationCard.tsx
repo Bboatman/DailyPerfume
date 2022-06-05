@@ -1,4 +1,4 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonFooter, IonIcon, IonLabel, IonTabBar, IonTabButton, IonToolbar } from '@ionic/react';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonFooter, IonIcon, IonLabel, IonTabBar, IonTabButton, IonText, IonToolbar } from '@ionic/react';
 import { useContext } from 'react'
 import { AppContext } from '../contexts/AppContext';
 import { skullSharp, heart, trashBin, sparkles, snow, flame, thunderstorm, sunny } from 'ionicons/icons';
@@ -57,20 +57,36 @@ const RecommendationCard: React.FC<ContainerProps> = ({ perfumeId, cardHeader })
         </IonTabBar>
     }
     return (
-        <IonCard style={{ height: 400 }}>
-            <div style={{ minHeight: 330, maxHeight: 330 }}>
+        <IonCard style={{ height: 380, marginBottom: 50 }}>
+            <div style={{ height: 310 }}>
                 <IonCardHeader>
                     <IonCardSubtitle color='secondary'>{cardHeader}</IonCardSubtitle>
-                    <IonCardTitle>{state.perfume[perfumeId].title}</IonCardTitle>
-                    <IonCardSubtitle>{state.perfume[perfumeId].house}</IonCardSubtitle>
+                    <IonToolbar style={{ marginTop: 10 }}>
+                        <IonCardTitle>{state.perfume[perfumeId].title}</IonCardTitle>
+                        <IonCardSubtitle>{state.perfume[perfumeId].house}</IonCardSubtitle>
+                        <IonButton style={{ marginLeft: 10 }} fill='outline' color='secondary' slot='end'>Wear It</IonButton>
+                    </IonToolbar>
                 </IonCardHeader>
 
                 <IonCardContent>
-                    {state.perfume[perfumeId].description}
+                    <div style={{ height: 200, overflow: 'scroll' }}>
+                        <IonText><p>{state.perfume[perfumeId].description}</p></IonText>
+                        <br />
+                        {state.perfume[perfumeId].silage &&
+                            <IonText>
+                                <p>Silage: {state.perfume[perfumeId].silage}</p>
+                            </IonText>
+                        }
+                        {state.perfume[perfumeId].throw &&
+                            <IonText>
+                                <p>Throw: {state.perfume[perfumeId].throw}</p>
+                            </IonText>
+                        }
+                    </div>
                 </IonCardContent>
             </div>
             <IonFooter>
-                <IonToolbar>
+                <IonToolbar style={{ marginTop: 10 }}>
                     {generateIconDescriptor(state.perfume[perfumeId])}
                 </IonToolbar>
             </IonFooter>

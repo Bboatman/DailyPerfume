@@ -35,7 +35,7 @@ export interface Perfume {
 
 const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
     const [perfume, setPerfume] = useState<Perfume>({
-        id: match.params.id ?? Math.random().toString(36).replace(/[^a-z]+/g, '').substring(0, 10)
+        id: match.params.id ?? Math.random().toString(36).replace(/[^a-z]+/g, '').substring(0, 15)
     })
     const [shouldLeave, setShouldLeave] = useState<boolean>(false);
     const [isEditing, setIsEditing] = useState<boolean>(false)
@@ -62,6 +62,9 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
 
     useEffect(() => {
         let id = match.params.id;
+        if (perfume) {
+            id = perfume.id;
+        }
         if (!id) {
             setIsEditing(true)
             return
@@ -70,8 +73,8 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
         if (!Object.hasOwn(state.perfume, id)) {
             return
         }
-        let perfume = state.perfume[id];
-        setPerfume(perfume);
+        let p = state.perfume[id];
+        setPerfume(p);
         return
     }, [match.params.id, state])
 
@@ -80,6 +83,19 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
             setHasReview(true);
         }
     }, [perfume])
+
+    useEffect(() => {
+        let id = match.params.id;
+        if (perfume) {
+            id = perfume.id;
+        }
+        if (!id || !state?.perfume) {
+            return;
+        }
+        if (!isEditing && state.perfume && Object.hasOwn(state.perfume, id)) {
+            setPerfume(state.perfume[id]);
+        }
+    }, [isEditing])
 
     return (
         <IonPage>
@@ -125,7 +141,7 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
                         {hasReview && <IonListHeader>Review Notes</IonListHeader>}
                         {perfume.silage && <IonItem>
                             <IonLabel position="stacked">Silage</IonLabel>
-                            <p>{perfume.title}</p>
+                            <p>{perfume.silage}</p>
                         </IonItem>}
                         {perfume.throw && <IonItem>
                             <IonLabel position="stacked">Throw</IonLabel>

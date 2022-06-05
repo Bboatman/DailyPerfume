@@ -7,7 +7,8 @@ import { AppContext } from '../../contexts/AppContext';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
+import './Recommend.css'
+import { Pagination } from "swiper";
 
 const Recommend: React.FC = () => {
   const ctx = useContext(AppContext);
@@ -17,7 +18,7 @@ const Recommend: React.FC = () => {
   const [matchRec, setMatchRec] = useState<any>();
 
   useEffect(() => {
-    if (!state || !state.perfume || doWeatherCheck === undefined || Object.values(state.perfume).length == 0) {
+    if (!state || !state.perfume || doWeatherCheck === undefined || Object.values(state.perfume).length === 0) {
       return
     }
     getRecommendations();
@@ -97,7 +98,7 @@ const Recommend: React.FC = () => {
               </IonRange>
           </IonItem>
         </IonList>
-        {Object.values(state?.perfume).length == 0 && (
+        {Object.values(state?.perfume).length === 0 && (
           <IonCard href='/create'>
             <IonCardHeader>You have no perfumes!</IonCardHeader>
             <IonCardContent>Press here to start adding some</IonCardContent>
@@ -108,6 +109,8 @@ const Recommend: React.FC = () => {
             spaceBetween={1}
             slidesPerView={1}
             loop={true}
+            modules={[Pagination]}
+            pagination={true}
           >
             {matchRec.match && state.perfume[matchRec.match] &&
               (<SwiperSlide>

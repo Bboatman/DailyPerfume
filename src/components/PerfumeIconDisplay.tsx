@@ -4,14 +4,14 @@ import { Perfume } from '../pages/CreatePerfume/CreatePerfume';
 
 const PerfumeIconDisplay: any = (perfume: Perfume, size?: string) => {
     const iconLabelMap: any = {
-        sad: (<IonIcon color="primary" size={size ?? "large"} icon={skullSharp} />),
-        happy: (<IonIcon color="primary" size={size ?? "large"} icon={heart} />),
-        fancy: (<IonIcon color="primary" size={size ?? "large"} icon={sparkles} />),
-        trashy: (<IonIcon color="primary" size={size ?? "large"} icon={trashBin} />),
-        gloomy: (<IonIcon color="primary" size={size ?? "large"} icon={thunderstorm} />),
-        bright: (<IonIcon color="primary" size={size ?? "large"} icon={sunny} />),
-        warm: (<IonIcon color="primary" size={size ?? "large"} icon={flame} />),
-        cool: (<IonIcon color="primary" size={size ?? "large"} icon={snow} />)
+        sad: (<IonIcon key="sadIco" color="primary" size={size ?? "large"} icon={skullSharp} />),
+        happy: (<IonIcon key="happyIco" color="primary" size={size ?? "large"} icon={heart} />),
+        fancy: (<IonIcon key="fancyIco" color="primary" size={size ?? "large"} icon={sparkles} />),
+        trashy: (<IonIcon key="trashyIco" color="primary" size={size ?? "large"} icon={trashBin} />),
+        gloomy: (<IonIcon key="gloomyIco" color="primary" size={size ?? "large"} icon={thunderstorm} />),
+        bright: (<IonIcon key="brightIco" color="primary" size={size ?? "large"} icon={sunny} />),
+        warm: (<IonIcon key="warmIco" color="primary" size={size ?? "large"} icon={flame} />),
+        cool: (<IonIcon key="coolIco" color="primary" size={size ?? "large"} icon={snow} />)
     }
 
     const generateIconArray = (perfume: any) => {
