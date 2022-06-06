@@ -57,7 +57,7 @@ const RecommendationCard: React.FC<ContainerProps> = ({ perfumeId, cardHeader })
         </IonTabBar>
     }
     return (
-        <IonCard style={{ height: 380, marginBottom: 50 }}>
+        <IonCard style={{ height: 380, marginBottom: 30 }}>
             <div style={{ height: (250 + (state.perfume[perfumeId].silage ? 0 : 30) + (state.perfume[perfumeId].throw ? 0 : 30)) }}>
                 <IonCardHeader>
                     <IonCardSubtitle color='secondary'>{cardHeader}</IonCardSubtitle>
@@ -66,7 +66,6 @@ const RecommendationCard: React.FC<ContainerProps> = ({ perfumeId, cardHeader })
                         <IonCardSubtitle>{state.perfume[perfumeId].house}</IonCardSubtitle>
                         <IonButton style={{ marginLeft: 10 }} fill='outline' color='secondary' slot='end'
                             onClick={() => {
-                                console.log(perfumeId)
                                 dispatch({ type: "setWear", data: perfumeId });
                             }}>Wear It</IonButton>
                     </IonToolbar>

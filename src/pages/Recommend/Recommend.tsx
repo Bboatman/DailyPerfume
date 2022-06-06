@@ -77,7 +77,6 @@ const Recommend: React.FC = () => {
       }
 
       let current = [mScore, fScore, tScore, gScore];
-      console.log(current);
       const scoreArr = []
         for (let perfume of allPerfumes){
           let perfumeArray = [perfume.mood, perfume.fanciness, perfume.temp, perfume.gloom]
@@ -126,11 +125,13 @@ const Recommend: React.FC = () => {
           {!state.settings?.manualEntry &&
             <IonCard>
               <IonCardHeader>
-                <IonCardTitle>Enter Your Mood</IonCardTitle>
+                <IonCardTitle>How are you feeling?</IonCardTitle>
               </IonCardHeader>
 
               <IonCardContent>
-                <div style={{ height: 190, overflow: "scroll" }}>
+                <div className='scrollingDiv' style={{
+                  height: 190, overflow: "scroll"
+                }}>
                   {moodList.map((elem: NoteRanking) => {
                     return (<IonChip key={elem.label} outline={!moodNotes.includes(elem.label)}
                       onClick={() => {

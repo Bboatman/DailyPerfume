@@ -1,3 +1,15 @@
 .swiper-pagination-bullet-active {
     background-color: #6C596E !important;
 }
+.scrollingDiv::-webkit-scrollbar {
+    width: 3px;
+    border-radius: 2px;
+}
+
+.scrollingDiv {
+    overflow-x: hidden;
+}
+
+.scrollingDiv::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, .1);
+}
