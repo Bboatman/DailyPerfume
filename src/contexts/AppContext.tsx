@@ -78,14 +78,12 @@ let reducer = (state: any, action: {type: string, data?: any}) => {
             state = { ...state, isSaving: action.data }
             break;
         case "setWear":
-            console.log(state.lastWorn)
             let lastWorn: string[] = state.lastWorn ? [...state.lastWorn] : [];
             if (lastWorn.length >= upperLimitFilter) {
                 lastWorn = lastWorn.slice(1, lastWorn.length)
             }
             if (!lastWorn.includes(action.data)) {
                 lastWorn.push(action.data);
-                console.log(lastWorn)
                 state = { ...state, lastWorn: lastWorn, isSaving: true }
             }
             break;
@@ -113,7 +111,6 @@ function AppContextProvider(props: any) {
 
     useEffect(() => {
         if (!loaded || weatherLoading) { return }
-        console.log("Firing weather check")
         doWeatherCheck();
         return;
     }, [loaded])
@@ -125,7 +122,6 @@ function AppContextProvider(props: any) {
     }, [state.isSaving])
 
     useEffect(() => {
-        console.log("tha weather:", state.weather)
         if (!state.weather) { return }
         console.log("weather updated", state.weather.main.feels_like);
         dispatch({ type: "setWeatherScores" });
@@ -152,14 +148,11 @@ function AppContextProvider(props: any) {
     }
 
     const findLocation = async () => {
-        console.log("In location")
         const data = await Geolocation.getCurrentPosition();
-        console.log("got coords", data.coords.latitude, data.coords.longitude)
         dispatch({type: "setLocation", data: data.coords})
 
         let w = await WeatherApi.getWeatherForLocation(data.coords.latitude, data.coords.longitude);
-        dispatch({type: "setWeather", data: w})
-        console.log("Setting weather done loading")
+        dispatch({ type: "setWeather", data: w })
         return
     };
 
@@ -168,15 +161,13 @@ function AppContextProvider(props: any) {
             console.log("In weather check", state.lastLocLookup)
             if (state.lastLocLookup === undefined || !state.lastLocLookup || !state.weatherScores) {
                 setWeatherLoading(true)
-                console.log("Getting weather, lookup undefined")
                 findLocation();
                 dispatch({ type: "updateLocLookup" })
             } else {
                 let startDate = new Date(state.lastLocLookup);
                 let endDate = new Date()
                 var minutes = (endDate.getTime() - startDate.getTime()) / 60000;
-                if (minutes > 10) { //TODO: Change back to 10
-                    console.log("Getting weather, time too long")
+                if (minutes > 10) {
                     setWeatherLoading(true)
                     findLocation();
                     dispatch({ type: "updateLocLookup" })

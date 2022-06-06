@@ -32,7 +32,6 @@ const Recommend: React.FC = () => {
     if (!state || !state.perfume || doWeatherCheck === undefined || Object.values(state.perfume).length === 0) {
       return
     }
-    console.log("settingRecs")
     getRecommendations();
   }, [state.perfume, userState, state.lastLocLookup, doWeatherCheck, state.weatherScores])
 
@@ -60,22 +59,20 @@ const Recommend: React.FC = () => {
   const generateRecommendations = () => {
     let allPerfumes: any[] = Object.values(state.perfume).filter((elem: any) => { return (elem !== undefined && !state.lastWorn?.includes(elem?.id) && !elem.isEmpty) });
     if (state.weatherScores) {
-      console.log(userState)
       let mScore = state.settings.mood ? userState.mood : 1 - userState.mood
       let fScore = state.settings.fanciness ? userState.fanciness : 1 - userState.fanciness;
       let tScore = state.settings.temp ? state.weatherScores.heatLevel : 5 - state.weatherScores.heatLevel;
       let gScore = state.settings.gloom ? state.weatherScores.gloom : 1 - state.weatherScores.gloom;
 
       if (!state.settings?.manualEntry) {
-        tScore = (tScore * 3 + userState.temp) / 4;
-        gScore = (gScore * 3 + userState.gloom) / 4;
+        tScore = (tScore * 4 + userState.temp) / 5;
+        gScore = (gScore * 4 + userState.gloom) / 5;
       }
       if (!tScore) {
         tScore = !userState.temp ? 3 : userState.temp;
       }
 
       if (!gScore) {
-        console.log("Gscore bad")
         gScore = !userState.gloom ? .5 : userState.gloom;
       }
 
