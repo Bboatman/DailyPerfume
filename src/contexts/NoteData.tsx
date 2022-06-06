@@ -89,7 +89,7 @@ const noteMasterList: NoteRanking[] = [
     }, {
         label: "Dry",
         category: "perfume",
-        temp: .52,
+        temp: .45,
         fanciness: .5,
         gloom: .6,
         mood: .45

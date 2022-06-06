@@ -13,12 +13,12 @@ const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<P
     useEffect(() => {
         if (!ctx.perfume) { return }
         if (!perfume.house || perfume.house.length === 0) {
-            let autoList: string[] = Object.values(ctx.perfume).map((elem: any) => elem?.house.trim());
+            let autoList: string[] = Object.values(ctx.perfume).map((elem: any) => elem?.house?.trim());
             autoList = Array.from(new Set<string>(autoList))
             setAutoCompleteList(autoList)
         }
         let filtered = Object.values(ctx.perfume).filter((elem: any) => {
-            return elem?.house.toLowerCase().includes(perfume.house?.toLowerCase())
+            return elem?.house?.toLowerCase().includes(perfume.house?.toLowerCase())
         });
         let autoList: string[] = (filtered && filtered.length > 0) ? filtered.map((elem: any) => elem.house.trim()) : []
         autoList = Array.from(new Set<string>(autoList))

@@ -51,7 +51,10 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
             p.fanciness = relevantNotes.map((elem: NoteRanking) => { return elem.fanciness }).reduce((a, b) => a + b) / relevantNotes.length;
             p.gloom = relevantNotes.map((elem: NoteRanking) => { return elem.gloom }).reduce((a, b) => a + b) / relevantNotes.length;
             p.mood = relevantNotes.map((elem: NoteRanking) => { return elem.mood }).reduce((a, b) => a + b) / relevantNotes.length;
-            p.temp = ((relevantNotes.map((elem: NoteRanking) => { return elem.temp }).reduce((a, b) => a + b) / relevantNotes.length) * 6) + 1;
+            let rawTemp = relevantNotes.map((elem: NoteRanking) => { return elem.temp }).reduce((a, b) => a + b) / relevantNotes.length;
+            console.log(rawTemp, perfume?.notes)
+            p.temp = rawTemp * 6;
+
         }
         dispatch({ type: "createPerfume", data: p })
         setIsEditing(false);

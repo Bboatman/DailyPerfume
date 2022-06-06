@@ -63,9 +63,24 @@ const Recommend: React.FC = () => {
       console.log(userState)
       let mScore = state.settings.mood ? userState.mood : 1 - userState.mood
       let fScore = state.settings.fanciness ? userState.fanciness : 1 - userState.fanciness;
-        let tScore = state.settings.temp ? state.weatherScores.heatLevel : 5 - state.weatherScores.heatLevel;
-        let gScore = state.settings.gloom ? state.weatherScores.gloom : 1 - state.weatherScores.gloom;
+      let tScore = state.settings.temp ? state.weatherScores.heatLevel : 5 - state.weatherScores.heatLevel;
+      let gScore = state.settings.gloom ? state.weatherScores.gloom : 1 - state.weatherScores.gloom;
+
+      if (!state.settings?.manualEntry) {
+        tScore = (tScore * 3 + userState.temp) / 4;
+        gScore = (gScore * 3 + userState.gloom) / 4;
+      }
+      if (!tScore) {
+        tScore = !userState.temp ? 3 : userState.temp;
+      }
+
+      if (!gScore) {
+        console.log("Gscore bad")
+        gScore = !userState.gloom ? .5 : userState.gloom;
+      }
+
       let current = [mScore, fScore, tScore, gScore];
+      console.log(current);
       const scoreArr = []
         for (let perfume of allPerfumes){
           let perfumeArray = [perfume.mood, perfume.fanciness, perfume.temp, perfume.gloom]

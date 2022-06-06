@@ -49,7 +49,7 @@ const RecommendationCard: React.FC<ContainerProps> = ({ perfumeId, cardHeader })
         let moodIcon, fancinessIcon, tempIcon, gloomIcon;
         moodIcon = perfume.mood < .5 ? iconLabelMap.sad : iconLabelMap.happy;
         fancinessIcon = perfume.fanciness < .5 ? iconLabelMap.trashy : iconLabelMap.fancy;
-        tempIcon = perfume.temp < 2.5 ? iconLabelMap.cool : iconLabelMap.warm;
+        tempIcon = perfume.temp < 3 ? iconLabelMap.cool : iconLabelMap.warm;
         gloomIcon = perfume.gloom < .5 ? iconLabelMap.gloomy : iconLabelMap.bright;
 
         return <IonTabBar>
