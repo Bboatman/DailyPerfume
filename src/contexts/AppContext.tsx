@@ -3,24 +3,39 @@ import React, { useEffect, useReducer, createContext, useState } from "react";
 import WeatherApi from "../services/weatherApi";
 import { Storage } from '@ionic/storage';
 
-let initialState = {
+interface SettingsState { [key: string]: boolean }
+interface PerfumeState { [key: string]: Perfume }
+export interface LocalState {
+    settings: SettingsState,
+    lastWorn: string[],
+    perfume: PerfumeState,
+    isSaving: boolean,
+    lastLocLookup?: string,
+    weatherScores?: any,
+    weather?: any,
+    cityName?: string
+}
+
+let initialState: LocalState = {
     settings: {
         gloom: true,
         temp: false,
         mood: true,
-        fanciness: true
+        fanciness: true,
+        manualEntry: false
     }, 
     lastWorn: [],
-    perfume: {}
+    perfume: {},
+    isSaving: false,
 }
 
 const AppContext = createContext<{
-    state: any,
+    state: LocalState,
     dispatch: React.Dispatch<any>,
     doWeatherCheck: any
 }
 >({
-        state: initialState,
+    state: initialState,
     dispatch: (action: { type: string, data?: any }) => null,
     doWeatherCheck: async () => null
     });
@@ -184,3 +199,23 @@ function AppContextProvider(props: any) {
 let AppContextConsumer = AppContext.Consumer;
 
 export { AppContext, AppContextProvider, AppContextConsumer };
+
+export interface Perfume {
+    title?: string,
+    house?: string,
+    notes?: string[],
+    id: string,
+    description?: string,
+    fanciness?: number,
+    mood?: number,
+    gloom?: number,
+    temp?: number,
+    silage?: number,
+    throw?: number,
+    inBottle?: string,
+    wet?: string,
+    oneHour?: string,
+    threeHour?: string,
+    dried?: string
+    isEmpty?: boolean
+}

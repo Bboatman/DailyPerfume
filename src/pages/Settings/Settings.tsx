@@ -1,4 +1,4 @@
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonTitle, IonToggle, IonToolbar } from '@ionic/react';
+import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonPage, IonTitle, IonToggle, IonToolbar } from '@ionic/react';
 import { useContext } from 'react';
 import AppHeader from '../../components/AppHeader';
 import { AppContext } from '../../contexts/AppContext';
@@ -55,6 +55,16 @@ const Settings: React.FC = () => {
                 dispatch({type: "setSetting", data: {value: e.detail.checked, type: "fanciness"}});
               }}} />
           </IonItem>
+          <IonItemDivider></IonItemDivider>
+          <IonItem>
+            <IonLabel>Use Old Scoring System</IonLabel>
+            <IonToggle checked={state.settings.manualEntry} onIonChange={e => {
+              if (dispatch) {
+                dispatch({ type: "setSetting", data: { value: e.detail.checked, type: "manualEntry" } });
+              }
+            }} />
+          </IonItem>
+
         </IonList>
       </IonContent>
     </IonPage>

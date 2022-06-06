@@ -1,6 +1,6 @@
 import { IonIcon } from '@ionic/react';
 import { skullSharp, heart, trashBin, sparkles, snow, flame, thunderstorm, sunny } from 'ionicons/icons';
-import { Perfume } from '../pages/CreatePerfume/CreatePerfume';
+import { Perfume } from '../contexts/AppContext';
 
 const PerfumeIconDisplay: any = (perfume: Perfume, size?: string) => {
     const iconLabelMap: any = {

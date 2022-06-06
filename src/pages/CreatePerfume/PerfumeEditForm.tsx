@@ -1,11 +1,11 @@
-import { IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonRange, IonTextarea, IonToggle } from '@ionic/react';
+import { IonChip, IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonRange, IonTextarea, IonToggle } from '@ionic/react';
 import { flame, heart, skullSharp, snow, sparkles, sunny, thunderstorm, trashBin, chevronDown, chevronUp } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 
 import './CreatePerfume.css';
 import TextInputWithSuggestion from '../../components/TextInputWithSuggestion';
-import { Perfume } from './CreatePerfume';
-
+import { Perfume } from '../../contexts/AppContext';
+import noteMasterList, { NoteRanking } from '../../contexts/NoteData';
 
 const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<Perfume>, ctx: any }> = ({ perfume, setPerfume, ctx }) => {
     const [autoCompleteList, setAutoCompleteList] = useState<string[]>([])
@@ -48,7 +48,7 @@ const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<P
                 <TextInputWithSuggestion
                     valueGetter={perfume.house}
                     valueSetter={setHouse}
-                    staticComparator={ctx.perfume ?? ctx.perfume[perfume.id]?.house}
+                    staticComparator={ctx.perfume ?? ctx.perfume[perfume.id].house}
                     suggestionArray={autoCompleteList}
                 />
             </IonItem>
@@ -71,39 +71,40 @@ const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<P
                     }}>
                 </IonToggle>
             </IonItem>
-            <IonItemDivider />
-            <IonItem>
-                <IonLabel position='fixed'>Temperature</IonLabel>
-                <IonRange color='secondary' value={perfume.temp} step={.1} min={1} max={5}
-                    onIonChange={e =>
-                        setPerfume({ ...perfume, temp: roundNumber(e.detail.value.valueOf() as number) })
-                    }>
+            {ctx.settings?.manualEntry &&
+                <div style={{ paddingTop: 10, paddingBottom: 10 }}>
+                    <IonItem>
+                        <IonLabel position='fixed'>Temperature</IonLabel>
+                        <IonRange color='secondary' value={perfume.temp} step={.1} min={1} max={5}
+                            onIonChange={e =>
+                                setPerfume({ ...perfume, temp: roundNumber(e.detail.value.valueOf() as number) })
+                            }>
 
-                    <IonIcon color="tertiary" icon={snow} slot="start" />
-                    <IonIcon color="tertiary" icon={flame} slot="end" />
-                </IonRange>
-            </IonItem>
-            <IonItem>
-                <IonLabel position='fixed'>Gloom</IonLabel>
-                <IonRange color='secondary' value={perfume.gloom} step={.02} min={0} max={1}
-                    onIonChange={e =>
-                        setPerfume({ ...perfume, gloom: roundNumber(e.detail.value.valueOf() as number) })
-                    }>
-                    <IonIcon color="tertiary" icon={thunderstorm} slot="start" />
-                    <IonIcon color="tertiary" icon={sunny} slot="end" />
-                </IonRange>
-            </IonItem>
-            <IonItem>
-                <IonLabel position='fixed'>Fanciness</IonLabel>
-                <IonRange color='secondary' value={perfume.fanciness} step={.02} min={0} max={1}
-                    onIonChange={e =>
-                        setPerfume({ ...perfume, fanciness: roundNumber(e.detail.value.valueOf() as number) })
-                    }>
-                    <IonIcon color="tertiary" icon={trashBin} slot="start" />
-                    <IonIcon color="tertiary" icon={sparkles} slot="end" />
-                </IonRange>
-            </IonItem>
-            <IonItem>
+                            <IonIcon color="tertiary" icon={snow} slot="start" />
+                            <IonIcon color="tertiary" icon={flame} slot="end" />
+                        </IonRange>
+                    </IonItem>
+                    <IonItem>
+                        <IonLabel position='fixed'>Gloom</IonLabel>
+                        <IonRange color='secondary' value={perfume.gloom} step={.02} min={0} max={1}
+                            onIonChange={e =>
+                                setPerfume({ ...perfume, gloom: roundNumber(e.detail.value.valueOf() as number) })
+                            }>
+                            <IonIcon color="tertiary" icon={thunderstorm} slot="start" />
+                            <IonIcon color="tertiary" icon={sunny} slot="end" />
+                        </IonRange>
+                    </IonItem>
+                    <IonItem>
+                        <IonLabel position='fixed'>Fanciness</IonLabel>
+                        <IonRange color='secondary' value={perfume.fanciness} step={.02} min={0} max={1}
+                            onIonChange={e =>
+                                setPerfume({ ...perfume, fanciness: roundNumber(e.detail.value.valueOf() as number) })
+                            }>
+                            <IonIcon color="tertiary" icon={trashBin} slot="start" />
+                            <IonIcon color="tertiary" icon={sparkles} slot="end" />
+                        </IonRange>
+                    </IonItem>
+                    <IonItem>
                 <IonLabel position='fixed'>Mood</IonLabel>
                 <IonRange color='secondary' pin={false} value={perfume.mood} step={.02} min={0} max={1}
                     onIonChange={e =>
@@ -112,7 +113,31 @@ const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<P
                     <IonIcon color="tertiary" icon={skullSharp} slot="start" />
                     <IonIcon color="tertiary" icon={heart} slot="end" />
                 </IonRange>
-            </IonItem>
+                    </IonItem>
+                </div>
+            }
+            {!ctx.settings?.manualEntry &&
+                <div className='chipHolder' >
+                    {noteMasterList.filter((elem: NoteRanking) => {
+                        return elem.category === "perfume"
+                    }).map((elem: NoteRanking) => {
+                        return (<IonChip key={elem.label} outline={!perfume.notes?.includes(elem.label)}
+                            onClick={() => {
+                                let newNotes = perfume.notes ? [...perfume.notes] : [];
+                                if (perfume.notes?.includes(elem.label)) {
+                                    let ind = perfume.notes?.indexOf(elem.label);
+                                    newNotes.splice(ind, 1);
+                                } else {
+                                    newNotes.push(elem.label);
+                                }
+                                setPerfume({ ...perfume, notes: newNotes })
+                            }}
+                        >
+                            <IonLabel>{elem.label}</IonLabel>
+                        </IonChip>)
+                    })}
+                </div>
+            }
             <IonListHeader color='light'>Review Notes</IonListHeader>
             <IonItem>
                 <IonLabel position="floating">Silage</IonLabel>
