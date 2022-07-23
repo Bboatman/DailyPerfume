@@ -1,13 +1,32 @@
-import { IonChip, IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonRange, IonTextarea, IonToggle } from '@ionic/react';
-import { flame, heart, skullSharp, snow, sparkles, sunny, thunderstorm, trashBin, chevronDown, chevronUp } from 'ionicons/icons';
+import {
+    IonChip,
+    IonIcon,
+    IonInput,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonListHeader,
+    IonRange,
+    IonTextarea,
+    IonToggle
+} from '@ionic/react';
+import {
+    skullSharp,
+    heart,
+    trashBin,
+    sparkles,
+    snow,
+    flame,
+    thunderstorm,
+    sunny
+} from 'ionicons/icons';
 import { useEffect, useState } from 'react';
-
 import './CreatePerfume.css';
 import TextInputWithSuggestion from '../../components/TextInputWithSuggestion';
-import { Perfume } from '../../contexts/AppContext';
+import { FumieAppState, Perfume } from '../../contexts/AppContext';
 import noteMasterList, { NoteRanking } from '../../contexts/NoteData';
 
-const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<Perfume>, ctx: any }> = ({ perfume, setPerfume, ctx }) => {
+const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<Perfume>, ctx: FumieAppState }> = ({ perfume, setPerfume, ctx }) => {
     const [autoCompleteList, setAutoCompleteList] = useState<string[]>([])
 
     useEffect(() => {
@@ -48,7 +67,7 @@ const PerfumeEditForm: React.FC<{ perfume: Perfume, setPerfume: React.Dispatch<P
                 <TextInputWithSuggestion
                     valueGetter={perfume.house}
                     valueSetter={setHouse}
-                    staticComparator={ctx.perfume ?? ctx.perfume[perfume.id].house}
+                    staticComparator={ctx.perfume ? ctx.perfume[perfume.id]?.house : ""}
                     suggestionArray={autoCompleteList}
                 />
             </IonItem>

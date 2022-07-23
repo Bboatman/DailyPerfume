@@ -1,4 +1,10 @@
-import { IonButton, IonButtons, IonIcon, IonTitle, IonToolbar } from '@ionic/react';
+import {
+  IonButton,
+  IonButtons,
+  IonIcon,
+  IonTitle,
+  IonToolbar
+} from '@ionic/react';
 import { settings } from 'ionicons/icons';
 
 const SettingsToolbar: React.FC = (props) => {

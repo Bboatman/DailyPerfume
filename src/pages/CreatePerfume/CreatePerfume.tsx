@@ -1,11 +1,39 @@
-import { IonBackButton, IonButton, IonButtons, IonChip, IonContent, IonFab, IonFabButton, IonFooter, IonHeader, IonIcon, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonNote, IonPage, IonPopover, IonRange, IonSpinner, IonTitle, IonToolbar } from '@ionic/react';
-import { trashBin, close, pencilSharp } from 'ionicons/icons';
-import { useContext, useEffect, useState } from 'react';
+import {
+    IonBackButton,
+    IonButton,
+    IonButtons,
+    IonChip,
+    IonContent,
+    IonFab,
+    IonFabButton,
+    IonFooter,
+    IonHeader,
+    IonIcon,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonListHeader,
+    IonNote,
+    IonPage,
+    IonRange,
+    IonSpinner,
+    IonTitle,
+    IonToolbar
+} from '@ionic/react';
+import {
+    trashBin,
+    close,
+    pencilSharp
+} from 'ionicons/icons';
+import {
+    useContext,
+    useEffect,
+    useState
+} from 'react';
 import { RouteComponentProps } from 'react-router';
 import AppHeader from '../../components/AppHeader';
 import { AppContext, Perfume } from '../../contexts/AppContext';
 import { useHistory } from 'react-router-dom';
-
 import './CreatePerfume.css';
 import PerfumeEditForm from './PerfumeEditForm';
 import PerfumeIconDisplay from '../../components/PerfumeIconDisplay';
@@ -18,13 +46,14 @@ export interface PerfumeCreateProps
 
 
 const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
-    const [perfume, setPerfume] = useState<Perfume>({
+    const defaultPerfume = {
         id: match.params.id ?? Math.random().toString(36).replace(/[^a-z]+/g, '').substring(0, 15),
         gloom: .5,
         temp: 3,
         fanciness: .5,
         mood: .5
-    })
+    }
+    const [perfume, setPerfume] = useState<Perfume>(defaultPerfume)
     const [shouldLeave, setShouldLeave] = useState<boolean>(false);
     const [isEditing, setIsEditing] = useState<boolean>(true)
     const [hasReview, setHasReview] = useState<boolean>(false)
@@ -46,7 +75,7 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
         let p = { ...perfume };
         if (perfume?.notes && perfume?.notes.length > 0) {
             let relevantNotes: any[] = perfume?.notes.map((elem: string) => {
-                return noteMasterList.find((note: NoteRanking) => note.label == elem && note.category === "perfume");
+                return noteMasterList.find((note: NoteRanking) => note.label === elem && note.category === "perfume");
             }).filter(elem => elem !== undefined);
             p.fanciness = relevantNotes.map((elem: NoteRanking) => { return elem.fanciness }).reduce((a, b) => a + b) / relevantNotes.length;
             p.gloom = relevantNotes.map((elem: NoteRanking) => { return elem.gloom }).reduce((a, b) => a + b) / relevantNotes.length;
@@ -73,7 +102,7 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
         } else {
             setIsEditing(false)
         }
-        let p = state.perfume[id];
+        let p = state.perfume[id] ?? defaultPerfume;
         setPerfume(p);
         return
     }, [match.params.id, state.perfume])
@@ -93,7 +122,8 @@ const CreatePerfume: React.FC<PerfumeCreateProps> = ({ match }) => {
             return;
         }
         if (!isEditing && state.perfume && Object.hasOwn(state.perfume, id)) {
-            setPerfume(state.perfume[id]);
+            let perfume: Perfume = state.perfume[id] ?? defaultPerfume;
+            setPerfume(perfume);
         }
     }, [isEditing])
 

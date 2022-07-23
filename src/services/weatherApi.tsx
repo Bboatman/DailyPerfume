@@ -32,7 +32,7 @@ const WeatherApi = {
     },
 
     getGloomLevel: function(data: any){
-        let clouds = data.clouds.all / 100; // %coverage
+        let clouds = data?.clouds?.all / 100; // %coverage
         let rain = (data.rain && data.rain["1h"] ? data.rain["1h"] : 0) / 6; // 7.62mm is considered high rainfall
         let snow = (data.snow && data.snow["1hr"] ? data.snow["1h"] : 0) / 11; // 12.7mm is considered heavy snowfall
         let visibility = 1 - (data.visibility / 10000); // meter (max 10,000 m) as percent poss

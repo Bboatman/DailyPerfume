@@ -1,6 +1,31 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonChip, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonRange, IonTitle, IonToolbar } from '@ionic/react';
-import { trashBin, sparkles, skullSharp, heart } from 'ionicons/icons';
-import { useContext, useEffect, useRef, useState } from 'react';
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonChip,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPage,
+  IonRange,
+  IonTitle,
+  IonToolbar
+} from '@ionic/react';
+import {
+  trashBin,
+  sparkles,
+  skullSharp,
+  heart
+} from 'ionicons/icons';
+import {
+  useContext,
+  useEffect,
+  useState
+} from 'react';
 import AppHeader from '../../components/AppHeader';
 import RecommendationCard from '../../components/RecommendationCard';
 import { AppContext } from '../../contexts/AppContext';
@@ -36,11 +61,11 @@ const Recommend: React.FC = () => {
   }, [state.perfume, userState, state.lastLocLookup, doWeatherCheck, state.weatherScores])
 
   useEffect(() => {
-    if (!moodNotes || moodNotes.length == 0) { return }
+    if (!moodNotes || moodNotes.length === 0) { return }
     if (moodNotes && moodNotes.length > 0) {
       let p: NoteRanking = { ...userState }
       let relevantNotes: any[] = moodNotes.map((elem: string) => {
-        return moodList.find((note: NoteRanking) => note.label == elem);
+        return moodList.find((note: NoteRanking) => note.label === elem);
       }).filter(elem => elem !== undefined);
       p.fanciness = relevantNotes.map((elem: NoteRanking) => { return elem.fanciness }).reduce((a, b) => a + b) / relevantNotes.length;
       p.gloom = relevantNotes.map((elem: NoteRanking) => { return elem.gloom }).reduce((a, b) => a + b) / relevantNotes.length;
@@ -78,12 +103,12 @@ const Recommend: React.FC = () => {
 
       let current = [mScore, fScore, tScore, gScore];
       const scoreArr = []
-        for (let perfume of allPerfumes){
-          let perfumeArray = [perfume.mood, perfume.fanciness, perfume.temp, perfume.gloom]
-          let cosineSimilarity = getCosineSimilarity(perfumeArray, current);
-          scoreArr.push({ score: cosineSimilarity, id: perfume.id })
-        }
-        
+      for (let perfume of allPerfumes) {
+        let perfumeArray = [perfume.mood, perfume.fanciness, perfume.temp, perfume.gloom]
+        let cosineSimilarity = getCosineSimilarity(perfumeArray, current);
+        scoreArr.push({ score: cosineSimilarity, id: perfume.id })
+      }
+
       scoreArr.sort((a, b) => (a.score < b.score) ? 1 : -1)
       let arrLen = scoreArr.length;
       let matchRec = {
@@ -95,25 +120,25 @@ const Recommend: React.FC = () => {
     }
   }
 
-  const getCosineSimilarity = (A: number[],B: number[]) =>{
-    var dotproduct=0;
-    var mA=0;
-    var mB=0;
-    for(let i = 0; i < A.length; i++){ 
-        dotproduct += (A[i] * B[i]);
-        mA += (A[i]*A[i]);
-        mB += (B[i]*B[i]);
+  const getCosineSimilarity = (A: number[], B: number[]) => {
+    var dotproduct = 0;
+    var mA = 0;
+    var mB = 0;
+    for (let i = 0; i < A.length; i++) {
+      dotproduct += (A[i] * B[i]);
+      mA += (A[i] * A[i]);
+      mB += (B[i] * B[i]);
     }
     mA = Math.sqrt(mA);
     mB = Math.sqrt(mB);
-    var similarity = (dotproduct)/((mA)*(mB))
+    var similarity = (dotproduct) / ((mA) * (mB))
     return similarity;
-}
+  }
 
 
   return (
     <IonPage>
-      <AppHeader title='Recommend Perfume'/>
+      <AppHeader title='Recommend Perfume' />
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
@@ -153,24 +178,24 @@ const Recommend: React.FC = () => {
             </IonCard>
           }
           {state.settings?.manualEntry && <div>
-        <IonItem>
+            <IonItem>
               <IonLabel position='fixed'>Fanciness</IonLabel>
               <IonRange color='secondary' value={userState.fanciness} step={.1} min={0} max={1} onIonChange={e =>
                 setUserState({ ...userState, fanciness: e.detail.value.valueOf() as number })
               }>
-              <IonIcon color="tertiary" icon={trashBin} slot="start" />
-              <IonIcon color="tertiary" icon={sparkles} slot="end" />
+                <IonIcon color="tertiary" icon={trashBin} slot="start" />
+                <IonIcon color="tertiary" icon={sparkles} slot="end" />
               </IonRange>
-        </IonItem>
-        <IonItem>
+            </IonItem>
+            <IonItem>
               <IonLabel position='fixed'>Mood</IonLabel>
               <IonRange color='secondary' pin={false} value={userState.mood} step={.1} min={0} max={1} onIonChange={e =>
                 setUserState({ ...userState, mood: e.detail.value as number })
               }>
-              <IonIcon color="tertiary" icon={skullSharp} slot="start" />
-              <IonIcon color="tertiary" icon={heart} slot="end" />
+                <IonIcon color="tertiary" icon={skullSharp} slot="start" />
+                <IonIcon color="tertiary" icon={heart} slot="end" />
               </IonRange>
-          </IonItem>
+            </IonItem>
           </div>}
         </IonList>
         {Object.values(state?.perfume).length === 0 && (
@@ -179,7 +204,7 @@ const Recommend: React.FC = () => {
             <IonCardContent>Press here to start adding some</IonCardContent>
           </IonCard>
         )}
-        {matchRec && 
+        {matchRec &&
           <Swiper
             spaceBetween={1}
             slidesPerView={1}

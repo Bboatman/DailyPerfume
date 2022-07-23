@@ -1,22 +1,47 @@
 import { Geolocation } from '@awesome-cordova-plugins/geolocation';
-import React, { useEffect, useReducer, createContext, useState } from "react";
+import React, {
+    useEffect,
+    useReducer,
+    createContext,
+    useState
+} from "react";
 import WeatherApi from "../services/weatherApi";
 import { Storage } from '@ionic/storage';
 
+export interface Perfume {
+    title?: string,
+    house?: string,
+    notes?: string[],
+    id: string,
+    description?: string,
+    fanciness?: number,
+    mood?: number,
+    gloom?: number,
+    temp?: number,
+    silage?: number,
+    throw?: number,
+    inBottle?: string,
+    wet?: string,
+    oneHour?: string,
+    threeHour?: string,
+    dried?: string
+    isEmpty?: boolean
+}
 interface SettingsState { [key: string]: boolean }
-interface PerfumeState { [key: string]: Perfume }
-export interface LocalState {
+interface PerfumeState { [key: string]: Perfume | undefined }
+export interface FumieAppState {
     settings: SettingsState,
     lastWorn: string[],
     perfume: PerfumeState,
     isSaving: boolean,
     lastLocLookup?: string,
+    location?: { latitude: any, longitude: any },
     weatherScores?: any,
     weather?: any,
     cityName?: string
 }
 
-let initialState: LocalState = {
+let initialState: FumieAppState = {
     settings: {
         gloom: true,
         temp: false,
@@ -30,7 +55,7 @@ let initialState: LocalState = {
 }
 
 const AppContext = createContext<{
-    state: LocalState,
+    state: FumieAppState,
     dispatch: React.Dispatch<any>,
     doWeatherCheck: any
 }
@@ -40,7 +65,7 @@ const AppContext = createContext<{
     doWeatherCheck: async () => null
     });
 
-let reducer = (state: any, action: {type: string, data?: any}) => {
+let reducer = (state: FumieAppState, action: { type: string, data?: any }) => {
     const perfume = {...state.perfume};
     const max = Math.floor(Object.keys(state.perfume).length / 3)
     const upperLimitFilter = max < 7 ? max : 7;
@@ -190,23 +215,3 @@ function AppContextProvider(props: any) {
 let AppContextConsumer = AppContext.Consumer;
 
 export { AppContext, AppContextProvider, AppContextConsumer };
-
-export interface Perfume {
-    title?: string,
-    house?: string,
-    notes?: string[],
-    id: string,
-    description?: string,
-    fanciness?: number,
-    mood?: number,
-    gloom?: number,
-    temp?: number,
-    silage?: number,
-    throw?: number,
-    inBottle?: string,
-    wet?: string,
-    oneHour?: string,
-    threeHour?: string,
-    dried?: string
-    isEmpty?: boolean
-}

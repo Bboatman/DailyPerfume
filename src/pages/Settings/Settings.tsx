@@ -1,4 +1,17 @@
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonPage, IonTitle, IonToggle, IonToolbar } from '@ionic/react';
+import {
+  IonBackButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonItem,
+  IonItemDivider,
+  IonLabel, IonList,
+  IonListHeader,
+  IonPage,
+  IonTitle,
+  IonToggle,
+  IonToolbar
+} from '@ionic/react';
 import { useContext } from 'react';
 import AppHeader from '../../components/AppHeader';
 import { AppContext } from '../../contexts/AppContext';

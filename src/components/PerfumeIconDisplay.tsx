@@ -1,5 +1,14 @@
 import { IonIcon } from '@ionic/react';
-import { skullSharp, heart, trashBin, sparkles, snow, flame, thunderstorm, sunny } from 'ionicons/icons';
+import {
+    skullSharp,
+    heart,
+    trashBin,
+    sparkles,
+    snow,
+    flame,
+    thunderstorm,
+    sunny
+} from 'ionicons/icons';
 import { Perfume } from '../contexts/AppContext';
 
 const PerfumeIconDisplay: any = (perfume: Perfume, size?: string) => {
@@ -14,12 +23,12 @@ const PerfumeIconDisplay: any = (perfume: Perfume, size?: string) => {
         cool: (<IonIcon key="coolIco" color="primary" size={size ?? "large"} icon={snow} />)
     }
 
-    const generateIconArray = (perfume: any) => {
+    const generateIconArray = (perfume: Perfume) => {
         let moodIcon, fancinessIcon, tempIcon, gloomIcon;
-        moodIcon = perfume.mood < .5 ? iconLabelMap.sad : iconLabelMap.happy;
-        fancinessIcon = perfume.fanciness < .5 ? iconLabelMap.trashy : iconLabelMap.fancy;
-        tempIcon = perfume.temp < 3 ? iconLabelMap.cool : iconLabelMap.warm;
-        gloomIcon = perfume.gloom < .5 ? iconLabelMap.gloomy : iconLabelMap.bright;
+        moodIcon = perfume.mood && perfume.mood < .5 ? iconLabelMap.sad : iconLabelMap.happy;
+        fancinessIcon = perfume.fanciness && perfume.fanciness < .5 ? iconLabelMap.trashy : iconLabelMap.fancy;
+        tempIcon = perfume.temp && perfume.temp < 3 ? iconLabelMap.cool : iconLabelMap.warm;
+        gloomIcon = perfume.gloom && perfume.gloom < .5 ? iconLabelMap.gloomy : iconLabelMap.bright;
 
         return [moodIcon, fancinessIcon, tempIcon, gloomIcon]
     }
