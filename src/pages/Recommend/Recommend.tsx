@@ -1,4 +1,5 @@
 import {
+  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -28,7 +29,7 @@ import {
 } from 'react';
 import AppHeader from '../../components/AppHeader';
 import RecommendationCard from '../../components/RecommendationCard';
-import { AppContext } from '../../contexts/AppContext';
+import { AppContext, Perfume } from '../../contexts/AppContext';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -77,22 +78,31 @@ const Recommend: React.FC = () => {
 
   const getRecommendations = async () => {
     if (doWeatherCheck === undefined) { return }
-    await doWeatherCheck();
+    if (state.canUseLocation){
+        await doWeatherCheck();
+    }
     generateRecommendations();
   }
 
   const generateRecommendations = () => {
-    let allPerfumes: any[] = Object.values(state.perfume).filter((elem: any) => { return (elem !== undefined && !state.lastWorn?.includes(elem?.id) && !elem.isEmpty) });
+    let allPerfumes: any[] = Object.values(state.perfume).filter((elem: any) => { return (elem !== undefined && !elem.isEmpty) });
+    let mScore, fScore, tScore, gScore;
+
+    mScore = state.settings.mood ? userState.mood : 1 - userState.mood
+    fScore = state.settings.fanciness ? userState.fanciness : 1 - userState.fanciness;
     if (state.weatherScores) {
-      let mScore = state.settings.mood ? userState.mood : 1 - userState.mood
-      let fScore = state.settings.fanciness ? userState.fanciness : 1 - userState.fanciness;
-      let tScore = state.settings.temp ? state.weatherScores.heatLevel : 5 - state.weatherScores.heatLevel;
-      let gScore = state.settings.gloom ? state.weatherScores.gloom : 1 - state.weatherScores.gloom;
+      tScore = state.settings.temp ? state.weatherScores.heatLevel : 5 - state.weatherScores.heatLevel;
+      gScore = state.settings.gloom ? state.weatherScores.gloom : 1 - state.weatherScores.gloom;
+    } else {
+      mScore = state.settings.temp ? userState.temp : 1 - userState.temp
+      fScore = state.settings.gloom ? userState.gloom : 1 - userState.gloom;
+    }
 
       if (!state.settings?.manualEntry) {
         tScore = (tScore * 4 + userState.temp) / 5;
         gScore = (gScore * 4 + userState.gloom) / 5;
       }
+
       if (!tScore) {
         tScore = !userState.temp ? 3 : userState.temp;
       }
@@ -102,14 +112,15 @@ const Recommend: React.FC = () => {
       }
 
       let current = [mScore, fScore, tScore, gScore];
-      const scoreArr = []
+      const scoreArr = [];
       for (let perfume of allPerfumes) {
-        let perfumeArray = [perfume.mood, perfume.fanciness, perfume.temp, perfume.gloom]
-        let cosineSimilarity = getCosineSimilarity(perfumeArray, current);
-        scoreArr.push({ score: cosineSimilarity, id: perfume.id })
+        let perfumeScoreArray = [perfume.mood, perfume.fanciness, perfume.temp, perfume.gloom]
+        let cosineSimilarity = getCosineSimilarity(perfumeScoreArray, current);
+        let decayedValue = getWearFitDecay(perfume);
+        scoreArr.push({ score: cosineSimilarity * decayedValue, id: perfume.id })
       }
 
-      scoreArr.sort((a, b) => (a.score < b.score) ? 1 : -1)
+      scoreArr.sort((a, b) => (a.score < b.score) ? 1 : -1);
       let arrLen = scoreArr.length;
       let matchRec = {
         match: scoreArr[0].id,
@@ -117,7 +128,30 @@ const Recommend: React.FC = () => {
         mid: scoreArr[Math.floor(arrLen / 2)].id
       }
       setMatchRec(matchRec);
+  }
+
+  const getWearFitDecay = (perfume: Perfume) => {
+    let now = new Date();
+    if (perfume.lastWear){
+      const rateOfDecay = .5;
+      const daysPassed = daysBetween(perfume.lastWear, now);
+      let decayedValue = 1*(Math.pow((1-rateOfDecay), daysPassed));
+      return 1-decayedValue;
+    } else {
+      return 1
     }
+  }
+
+  function treatAsUTC(date: Date): Date {
+      var result = new Date(date);
+      result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+      return result;
+  }
+
+  function daysBetween(startDate: Date, endDate: Date): number {
+      const millisecondsPerDay = 8.64e+7;
+      const millisecondsBetweenDates = treatAsUTC(endDate).getTime() - treatAsUTC(startDate).getTime();
+      return millisecondsBetweenDates / millisecondsPerDay;
   }
 
   const getCosineSimilarity = (A: number[], B: number[]) => {
@@ -147,6 +181,14 @@ const Recommend: React.FC = () => {
         </IonHeader>
         <IonList>
 
+        {!state.canUseLocation && (
+          <IonToolbar color="secondary">
+            <IonTitle size="small">
+              Couldn't get location. Recommendations will be less accurate.
+            </IonTitle>
+          </IonToolbar>
+        )}
+
           {!state.settings?.manualEntry &&
             <IonCard>
               <IonCardHeader>
@@ -154,11 +196,11 @@ const Recommend: React.FC = () => {
               </IonCardHeader>
 
               <IonCardContent>
-                <div className='scrollingDiv' style={{
-                  height: 190, overflow: "scroll"
-                }}>
+                <div className='scrollingDiv fixedHeightDiv'>
                   {moodList.map((elem: NoteRanking) => {
-                    return (<IonChip key={elem.label} outline={!moodNotes.includes(elem.label)}
+                    return (<IonChip
+                      key={elem.label}
+                      outline={!moodNotes.includes(elem.label)}
                       onClick={() => {
                         let newNotes = [...moodNotes]
                         if (moodNotes.includes(elem.label)) {
@@ -201,7 +243,15 @@ const Recommend: React.FC = () => {
         {Object.values(state?.perfume).length === 0 && (
           <IonCard href='/create'>
             <IonCardHeader>You have no perfumes!</IonCardHeader>
-            <IonCardContent>Press here to start adding some</IonCardContent>
+            <IonCardContent>
+              <div className='fixedHeightDiv' style={{
+                  textAlign: 'center',
+                  justifyContent: 'spaceAround',
+                  alignItems: 'center',
+                }}>
+                <IonButton color="primary">Add One!</IonButton>
+              </div>
+            </IonCardContent>
           </IonCard>
         )}
         {matchRec &&

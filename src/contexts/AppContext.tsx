@@ -24,21 +24,23 @@ export interface Perfume {
     wet?: string,
     oneHour?: string,
     threeHour?: string,
-    dried?: string
-    isEmpty?: boolean
+    dried?: string,
+    isEmpty?: boolean,
+    lastWear?: Date
 }
 interface SettingsState { [key: string]: boolean }
 interface PerfumeState { [key: string]: Perfume | undefined }
 export interface FumieAppState {
     settings: SettingsState,
-    lastWorn: string[],
+    lastWorn?: string[],
     perfume: PerfumeState,
     isSaving: boolean,
+    canUseLocation: boolean,
     lastLocLookup?: string,
     location?: { latitude: any, longitude: any },
     weatherScores?: any,
     weather?: any,
-    cityName?: string
+    cityName?: string,
 }
 
 let initialState: FumieAppState = {
@@ -48,10 +50,11 @@ let initialState: FumieAppState = {
         mood: true,
         fanciness: true,
         manualEntry: false
-    }, 
+    },
     lastWorn: [],
     perfume: {},
     isSaving: false,
+    canUseLocation: true
 }
 
 const AppContext = createContext<{
@@ -103,18 +106,17 @@ let reducer = (state: FumieAppState, action: { type: string, data?: any }) => {
             state = { ...state, isSaving: action.data }
             break;
         case "setWear":
-            let lastWorn: string[] = state.lastWorn ? [...state.lastWorn] : [];
-            if (lastWorn.length >= upperLimitFilter) {
-                lastWorn = lastWorn.slice(1, lastWorn.length)
-            }
-            if (!lastWorn.includes(action.data)) {
-                lastWorn.push(action.data);
-                state = { ...state, lastWorn: lastWorn, isSaving: true }
+            if (action.data){
+              perfume[action.data] = {...perfume[action.data], id: action.data, lastWear: new Date()};
+              state = { ...state, perfume};
             }
             break;
-
+        case "canUseLocation":
+            state = { ...state, canUseLocation: action.data }
+            break;
   }
     state = { ...state }
+    console.log(state.perfume);
   return state;
 };
 
@@ -173,16 +175,22 @@ function AppContextProvider(props: any) {
     }
 
     const findLocation = async () => {
+      try {
+        dispatch({type: "canUseLocation", data: true})
         const data = await Geolocation.getCurrentPosition();
         dispatch({type: "setLocation", data: data.coords})
 
         let w = await WeatherApi.getWeatherForLocation(data.coords.latitude, data.coords.longitude);
         dispatch({ type: "setWeather", data: w })
         return
+      } catch {
+        console.log("Can't get location");
+        dispatch({type: "canUseLocation", data: false})
+      }
     };
 
     const doWeatherCheck = async () => {
-        if (loaded && !weatherLoading) {
+        if (loaded && !weatherLoading && state.canUseLocation) {
             console.log("In weather check", state.lastLocLookup)
             if (state.lastLocLookup === undefined || !state.lastLocLookup || !state.weatherScores) {
                 setWeatherLoading(true)
