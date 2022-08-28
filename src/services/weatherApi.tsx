@@ -20,9 +20,9 @@ const WeatherApi = {
         let temperature = data.main.feels_like
         if (temperature >= 29){
             return 5 
-        } else if (temperature >= 20){
+        } else if (temperature >= 18) {
             return 4
-        } else if (temperature >= 15){
+        } else if (temperature >= 12) {
             return 3
         } else if (temperature >= 0){
             return 2
